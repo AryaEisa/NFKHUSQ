@@ -45,7 +45,7 @@ fun StartPage(navController: NavController) {
         ) {
             // Logo
             Image(
-                painter = painterResource(id = R.drawable.ic_launcher_background),
+                painter = painterResource(id = R.drawable.husq3),
                 contentDescription = "App Logo",
                 modifier = Modifier.size(150.dp)
             )
@@ -54,10 +54,10 @@ fun StartPage(navController: NavController) {
 
             // Title
             Text(
-                text = "Welcome to Our App",
+                text = "Welcome",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
-                fontSize = 24.sp
+                fontSize = 14.sp
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -65,8 +65,8 @@ fun StartPage(navController: NavController) {
             // Description
             Text(
                 text = "Get started by managing your settings",
-                fontSize = 18.sp,
-                style = MaterialTheme.typography.bodyLarge
+                fontSize = 12.sp,
+                style = MaterialTheme.typography.bodySmall
             )
 
             Spacer(modifier = Modifier.height(32.dp))
