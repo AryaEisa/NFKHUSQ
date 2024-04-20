@@ -1,0 +1,14 @@
+   var isChecked by remember { mutableStateOf(true) }
+    Row (modifier = Modifier.padding(16.dp)) {
+        Switch(
+            checked = isChecked,
+            onCheckedChange = { isChecked = !isChecked },
+            thumbContent = {
+                Icon(imageVector = Icons.Default.Check, contentDescription = stringResource(id = androidx.compose.ui.R.string.selected))
+            }
+        )
+    }
+
+
+    Denna kod är hur man fixar switch funktion korrekt.
+    ________________________________________________________________________________________

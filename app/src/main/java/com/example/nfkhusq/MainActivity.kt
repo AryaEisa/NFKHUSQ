@@ -1,26 +1,25 @@
 package com.example.nfkhusq
 
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothManager
+import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Switch
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.nfkhusq.ui.theme.NFKHUSQTheme
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import com.example.nfkhusq.Permissions.BluetoothPermissions
+
+
 /*
 Den första raden kontrollerar om klassisk Bluetooth är tillgängligt
 med hjälp av metoden hasSystemFeature i PackageManager-klassen.
@@ -36,42 +35,50 @@ FEATURE_BLUETOOTH_LE. Även här returnerar metoden true om funktionen
 class MainActivity : ComponentActivity() {
     private var bluetoothAvailable: Boolean = false
     private var bluetoothLEAvailable: Boolean = false
+    private lateinit var bluetoothAdapter: BluetoothAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val packageManager = packageManager
-        bluetoothAvailable = packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH)
-        bluetoothLEAvailable = packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)
+        val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+        bluetoothAdapter = bluetoothManager.adapter
+
+        val bluetoothConnectPermission = android.Manifest.permission.BLUETOOTH_CONNECT
+
+        // Check if the permission is already granted (necessary for Android 12+)
+        if (ContextCompat.checkSelfPermission(this, bluetoothConnectPermission) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(bluetoothConnectPermission), REQUEST_ENABLE_BT)
+        }
+
+        if (!bluetoothAdapter.isEnabled) {
+            val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
+        }
 
         setContent {
+            //val navController = rememberNavController()
             NFKHUSQTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Greeting("Android")
+                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+                    Navpage()
                 }
             }
         }
     }
+
+    companion object {
+        private const val REQUEST_ENABLE_BT = 1
+    }
+
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    var isChecked by remember { mutableStateOf(true) }
-    Switch(
-        checked = isChecked,
-        onCheckedChange = { isChecked = !isChecked },
-        thumbContent = {
-            Icon(imageVector = Icons.Default.Check, contentDescription = stringResource(id = androidx.compose.ui.R.string.selected))
-        }
-    )
-}
+
+
+
+
 
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     NFKHUSQTheme {
-        Greeting("Android")
+
     }
 }
