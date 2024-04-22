@@ -225,11 +225,29 @@ visually distinct. Inside the card, the device's name and address are displayed 
 @SuppressLint("MissingPermission")
 @Composable
 fun DeviceItem(deviceItem: BluetoothDeviceItem) {
+    /*
+    Card: A Compose UI element that provides an elevated card-like appearance.
+    It's commonly used to distinguish elements visually from their background.
+Modifier.fillMaxWidth(): This modifier ensures the card fills the maximum available width of its parent container.
+Modifier.padding(vertical = 8.dp): Applies vertical padding inside the card to increase the spacing
+above and below the content for better touch targets and visual separation.
+     */
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp) // Increased vertical padding for better tap targets and spacing
     ) {
+        /*
+        Row: A layout composable that places its children in a horizontal sequence.
+        Here, it's used to align text elements side by side (if there were multiple columns or additional icons,
+        they would be laid out here).
+        Modifier.padding(16.dp): Applies padding around the content inside the row for spacing from the card edges.
+        Modifier.alpha(0.7f): Sets the opacity of the entire row to 70%, making the text and other contents slightly
+        transparent for a subdued look.
+        Modifier.fillMaxWidth(): Ensures the row uses the full width available within the card.
+        verticalAlignment = Alignment.CenterVertically:
+            Aligns the children of the row vertically in the center.
+         */
         Row(
             modifier = Modifier
                 .padding(16.dp)
@@ -237,6 +255,23 @@ fun DeviceItem(deviceItem: BluetoothDeviceItem) {
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            /*
+            Column: A layout composable that places its children vertically.
+            In this case, it's used to stack the device name on top of the device address.
+            Modifier.weight(1f): In a row, this makes the column take
+            up all available space that isn't used by other elements.
+            Text: Composables that display text. The first Text shows the device's name,
+            and the second shows its address.
+            text = deviceItem.device.name ?: "Unnamed Device": Displays the name of the device.
+            If the name is null, it defaults to "Unnamed Device".
+            fontWeight, fontSize, color: Styling properties to customize the appearance of the text.
+            fontWeight = FontWeight.Bold makes the text bold.
+            style = MaterialTheme.typography.bodySmall: Applies a predefined text style,
+            making it smaller than the default.
+            color = MaterialTheme.colorScheme.onSurfaceVariant:
+                Uses a color defined in the theme that's designed to contrast less with the background than the primary text color.
+            modifier = Modifier.alpha(0.8f): Makes the address text slightly more opaque than the rest of the row.
+             */
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = deviceItem.device.name ?: "Unnamed Device",
