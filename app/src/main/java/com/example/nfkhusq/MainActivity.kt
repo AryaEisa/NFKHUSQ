@@ -5,19 +5,21 @@ import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.nfkhusq.ui.theme.NFKHUSQTheme
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.example.nfkhusq.Permissions.BluetoothPermissions
+import com.example.nfkhusq.Bluetooth.BluetoothLeScanner
+import com.example.nfkhusq.ui.theme.NFKHUSQTheme
 
 
 /*
@@ -32,33 +34,51 @@ tillgängligt med hjälp av samma metod, men denna gång med konstanten
 FEATURE_BLUETOOTH_LE. Även här returnerar metoden true om funktionen
 är tillgänglig och false om den inte är det.
  */
+@Suppress("DEPRECATION")
 class MainActivity : ComponentActivity() {
-    private var bluetoothAvailable: Boolean = false
-    private var bluetoothLEAvailable: Boolean = false
+
     private lateinit var bluetoothAdapter: BluetoothAdapter
 
+    @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
         bluetoothAdapter = bluetoothManager.adapter
 
-        val bluetoothConnectPermission = android.Manifest.permission.BLUETOOTH_CONNECT
+        val bluetoothScanPermission = android.Manifest.permission.BLUETOOTH_SCAN
 
-        // Check if the permission is already granted (necessary for Android 12+)
-        if (ContextCompat.checkSelfPermission(this, bluetoothConnectPermission) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(bluetoothConnectPermission), REQUEST_ENABLE_BT)
+        // Check if the permission is already granted
+        if (ContextCompat.checkSelfPermission(this, bluetoothScanPermission) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(bluetoothScanPermission), REQUEST_BLUETOOTH_SCAN)
         }
 
+        // Check if Bluetooth is enabled
         if (!bluetoothAdapter.isEnabled) {
             val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
         }
 
         setContent {
-            //val navController = rememberNavController()
             NFKHUSQTheme {
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    Navpage()
+                    BluetoothLeScanner()
+                }
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            REQUEST_BLUETOOTH_SCAN -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission granted, perform Bluetooth scanning or other actions
+                } else {
+                    // Permission denied, handle accordingly
                 }
             }
         }
@@ -66,9 +86,10 @@ class MainActivity : ComponentActivity() {
 
     companion object {
         private const val REQUEST_ENABLE_BT = 1
+        private const val REQUEST_BLUETOOTH_SCAN = 2
     }
-
 }
+
 
 
 

@@ -22,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,7 +35,7 @@ import androidx.navigation.compose.rememberNavController
 fun StartPage(navController: NavController) {
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
+        color = Color.Black
     ) {
         Column(
             modifier = Modifier
@@ -57,7 +58,8 @@ fun StartPage(navController: NavController) {
                 text = "Welcome",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
-                fontSize = 14.sp
+                fontSize = 14.sp,
+                color = Color.White
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -66,7 +68,8 @@ fun StartPage(navController: NavController) {
             Text(
                 text = "Get started by managing your settings",
                 fontSize = 12.sp,
-                style = MaterialTheme.typography.bodySmall
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.White
             )
 
             Spacer(modifier = Modifier.height(32.dp))

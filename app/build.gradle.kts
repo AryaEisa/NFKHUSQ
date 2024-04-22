@@ -1,3 +1,9 @@
+import org.gradle.internal.impldep.bsh.commands.dir
+import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
+
+
+
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -50,6 +56,7 @@ android {
 }
 
 dependencies {
+
     val nav_version = "2.7.7"
     implementation("androidx.navigation:navigation-compose:$nav_version")
     implementation("androidx.core:core-ktx:1.9.0")
@@ -60,6 +67,36 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+    implementation("androidx.core:core-ktx:1.9.0")
+    implementation ("androidx.lifecycle:lifecycle-runtime-compose:2.6.0-alpha04")
+    implementation("androidx.compose.material:material-icons-core:1.2.0")
+    implementation("androidx.compose.material:material-icons-extended:1.2.0")
+    implementation("androidx.activity:activity-compose:1.3.0-alpha06")
+    implementation ("com.google.accompanist:accompanist-permissions:0.33.1-alpha")
+
+    implementation ("com.google.accompanist:accompanist-permissions:0.29.0-alpha")
+    implementation ("com.jakewharton.timber:timber:5.0.1")
+    implementation ("com.jakewharton.timber:timber:5.0.1")
+    implementation ("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
+
+    val room_version = "2.5.0"
+
+    implementation ("androidx.room:room-runtime:$room_version")
+    implementation ("androidx.room:room-ktx:$room_version")
+    annotationProcessor ("androidx.room:room-compiler:$room_version")
+
+
+    val koin_android_version= "3.3.2"
+    val koin_android_compose_version= "3.4.1"
+
+    implementation ("io.insert-koin:koin-android:$koin_android_version")
+    implementation ("io.insert-koin:koin-android-compat:$koin_android_version")
+    implementation ("io.insert-koin:koin-androidx-workmanager:$koin_android_version")
+    implementation ("io.insert-koin:koin-androidx-navigation:$koin_android_version")
+    implementation ("io.insert-koin:koin-androidx-compose:$koin_android_compose_version")
+
+    //testing
+
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")

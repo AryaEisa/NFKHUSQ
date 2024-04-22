@@ -1,14 +1,13 @@
 package com.example.nfkhusq.Permissions
 
 import android.Manifest
-import android.bluetooth.BluetoothManager
 import android.content.Context
-import android.content.pm.PackageManager
+import android.os.Build
 import android.util.Log
 import android.widget.Toast
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -43,6 +42,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.nfkhusq.ui.theme.NFKHUSQTheme
 
+
+@RequiresApi(Build.VERSION_CODES.S)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BluetoothPermissions(navController: NavController) {
@@ -100,10 +101,12 @@ fun BluetoothPermissions(navController: NavController) {
                         )
                     }
                 },
+                enabled = !isBluetoothPermissionGranted ,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary
+                    containerColor = if (isBluetoothPermissionGranted) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3F) else MaterialTheme.colorScheme.primary,
+                    contentColor = if (isBluetoothPermissionGranted) MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.3F) else MaterialTheme.colorScheme.onPrimary
                 ),
+
                 contentPadding = PaddingValues(horizontal = 32.dp, vertical = 12.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -126,6 +129,9 @@ fun BluetoothPermissions(navController: NavController) {
         }
     }
 }
+
+
+@RequiresApi(Build.VERSION_CODES.S)
 @Preview(showBackground = true)
 @Composable
 fun PrevBluetoothPermission() {

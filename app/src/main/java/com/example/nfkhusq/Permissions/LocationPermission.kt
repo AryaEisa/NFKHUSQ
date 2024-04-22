@@ -1,3 +1,5 @@
+package com.example.nfkhusq.Permissions
+
 import android.Manifest
 import android.content.Context
 import android.util.Log
@@ -24,7 +26,7 @@ import androidx.navigation.NavController
 import com.example.nfkhusq.ui.theme.NFKHUSQTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LocationhPermission(navController: NavController) {
+fun LocationPermission(navController: NavController) {
     val context = LocalContext.current
     val preferences = context.getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
     var isLocationPermissionGranted by remember {
@@ -72,6 +74,8 @@ fun LocationhPermission(navController: NavController) {
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onPrimary
                 ),
+                enabled = !isLocationPermissionGranted
+                ,
                 contentPadding = PaddingValues(horizontal = 32.dp, vertical = 12.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -101,6 +105,6 @@ fun PreviewLocationhPermission() {
     NFKHUSQTheme {
         // Assuming 'navController' is a stub for preview purposes
         val navController = NavController(LocalContext.current)
-        LocationhPermission(navController)
+        LocationPermission(navController)
     }
 }
