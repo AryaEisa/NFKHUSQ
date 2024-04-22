@@ -2,7 +2,6 @@ package com.example.nfkhusq.Permissions
 
 import android.Manifest
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -24,6 +23,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.nfkhusq.ui.theme.NFKHUSQTheme
+import timber.log.Timber
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LocationPermission(navController: NavController) {
@@ -37,10 +38,10 @@ fun LocationPermission(navController: NavController) {
         isLocationPermissionGranted = isGranted
         preferences.edit().putBoolean("LOCATION_PERMISSION_GRANTED", isGranted).apply()
         if (isGranted) {
-            Log.d("LocationPermission", "Location permission granted.")
+            Timber.tag("LocationPermission").d("Location permission granted.")
         } else {
             Toast.makeText(context, "Location permission is required for proper app functionality.", Toast.LENGTH_LONG).show()
-            Log.d("LocationPermission", "Location permission denied.")
+            Timber.tag("LocationPermission").d("Location permission denied.")
         }
     }
 

@@ -15,9 +15,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.nfkhusq.Screens.BluetoothLeScanner
 import com.example.nfkhusq.Permissions.BluetoothPermissions
 import com.example.nfkhusq.Permissions.LocationPermission
+import com.example.nfkhusq.Screens.BluetoothLeScanner
 
 
 @RequiresApi(Build.VERSION_CODES.S)
@@ -28,7 +28,7 @@ fun Navpage() {
         composable("startPage") { StartPage(navController) }
         composable("LocationPermission") { LocationPermission(navController) }
         composable("BluetoothPermission") { BluetoothPermissions(navController) }
-        composable("BluetoothLEScanner") { BluetoothLeScanner(navController)}
+        composable("BluetoothLEScanner") { BluetoothLeScanner() }
         // Default or error composable
         composable("error") {
             Column(

@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.example.nfkhusq.Screens
 
 import android.Manifest
@@ -41,13 +43,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 
 @OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("MissingPermission")
+@SuppressLint("MissingPermission", "InlinedApi")
 @Composable
-fun BluetoothLeScanner(navController: NavController) {
+fun BluetoothLeScanner() {
     val context = LocalContext.current
     //bluetoothDevices: A list to hold the Bluetooth devices that are discovered
     val bluetoothDevices = remember { mutableStateListOf<BluetoothDevice>() }
@@ -200,5 +200,5 @@ and efficient UI.
 @Preview
 @Composable
 fun BluetoothLeScannerPreview() {
-    BluetoothLeScanner(navController = rememberNavController())
+    BluetoothLeScanner()
 }
