@@ -11,22 +11,19 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -34,7 +31,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,8 +46,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import com.example.nfkhusq.R
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
 import java.time.Instant
 
 data class BluetoothDeviceItem(
@@ -69,36 +63,26 @@ fun BluetoothLeScanner() {
     val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
     //isDiscovering: A state to keep track of whether the app is currently discovering devices.
     val isDiscovering = remember { mutableStateOf(false) }
-    val currentScanDevices = remember { mutableListOf<BluetoothDevice>() }
+    remember { mutableListOf<BluetoothDevice>() }
 /*
 A permission launcher is set up to request the BLUETOOTH_CONNECT permission if
 it's not already granted. This is essential for accessing Bluetooth capabilities
 in Android 12 and above.
 
  */
+
     // Permission launcher
     val permissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission(),
+        ActivityResultContracts.RequestPermission(),
         onResult = { isGranted ->
             if (isGranted) {
                 startDiscovery(bluetoothAdapter, isDiscovering)
             } else {
-                // Handle the case where permission is not granted
+                Toast.makeText(context, "Bluetooth permission denied", Toast.LENGTH_SHORT).show()
             }
         }
     )
-/*
-LaunchedEffect: This block checks if the necessary Bluetooth permission is granted.
-If not, it launches a request for this permission. If the permission is already granted,
-it starts the Bluetooth discovery process.
- */
-    LaunchedEffect(key1 = Unit) {
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-            permissionLauncher.launch(Manifest.permission.BLUETOOTH_CONNECT)
-        } else {
-            startDiscovery(bluetoothAdapter, isDiscovering)
-        }
-    }
+
 /*
 This is a component that listens for Bluetooth devices being found nearby.
 If a device is found and it has a name, it adds the device to the list bluetoothDevices.
@@ -108,22 +92,13 @@ If a device is found and it has a name, it adds the device to the list bluetooth
             override fun onReceive(context: Context?, intent: Intent?) {
                 when (intent?.action) {
                     BluetoothDevice.ACTION_FOUND -> {
-                        val device: BluetoothDevice? =
-                            intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
-                        device?.let { foundDevice ->
-                            val index =
-                                bluetoothDevices.indexOfFirst { it.device.address == foundDevice.address }
+                        intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)?.let { device ->
+                            val existingDevice = bluetoothDevices.firstOrNull { it.device.address == device.address }
                             if (device.name != null) {
-                                if (index != -1) {
-                                    bluetoothDevices[index].lastSeen =
-                                        Instant.now() // Update the last seen time
+                                if (existingDevice != null) {
+                                    existingDevice.lastSeen = Instant.now()
                                 } else {
-                                    bluetoothDevices.add(
-                                        BluetoothDeviceItem(
-                                            foundDevice,
-                                            Instant.now()
-                                        )
-                                    ) // Add new device
+                                    bluetoothDevices.add(BluetoothDeviceItem(device, Instant.now()))
                                 }
                             }
                         }
@@ -137,14 +112,40 @@ This ensures that the Bluetooth receiver is registered when the UI is visible an
 unregistered when the UI is no longer in use, helping to manage resources efficiently
 and avoid memory leaks.
  */
-    DisposableEffect(Unit) {
+    DisposableEffect(context) {
         val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
+        val bluetoothReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                intent?.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)?.let { device ->
+                    if (device.name != null) {
+                        val existingDevice = bluetoothDevices.firstOrNull { it.device.address == device.address }
+                        if (existingDevice != null) {
+                            existingDevice.lastSeen = Instant.now()
+                        } else {
+                            bluetoothDevices.add(BluetoothDeviceItem(device, Instant.now()))
+                        }
+                    }
+                }
+            }
+        }
         context.registerReceiver(bluetoothReceiver, filter)
         onDispose {
             context.unregisterReceiver(bluetoothReceiver)
         }
     }
-
+    /*
+ LaunchedEffect: This block checks if the necessary Bluetooth permission is granted.
+ If not, it launches a request for this permission. If the permission is already granted,
+ it starts the Bluetooth discovery process.
+  */
+    LaunchedEffect(key1 = Unit) {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+            permissionLauncher.launch(Manifest.permission.BLUETOOTH_CONNECT)
+        } else {
+            startDiscovery(bluetoothAdapter, isDiscovering)
+        }
+    }
+/*
     LaunchedEffect(key1 = Unit) {
         while (isActive) {
             if (ContextCompat.checkSelfPermission(
@@ -168,6 +169,8 @@ and avoid memory leaks.
             } // Remove devices not seen in the last scan
         }
     }
+
+ */
 /*
 A scaffold structure with a top app bar displaying the title "Bluetooth Scanner".
 Inside the scaffold, there's a column layout that lists all discovered Bluetooth
@@ -208,8 +211,8 @@ devices using a LazyColumn, which is efficient for displaying lists of data.
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 LazyColumn {
-                    items(bluetoothDevices) { device ->
-                        DeviceItem(device)
+                    items(bluetoothDevices) { deviceItem ->
+                        DeviceItem(deviceItem, context, bluetoothAdapter!!)
                     }
                 }
             }
@@ -222,87 +225,7 @@ This function is responsible for how each Bluetooth device is displayed:
 Card and Row Layout: Each device is shown in a card format, making it
 visually distinct. Inside the card, the device's name and address are displayed in a row format.
  */
-@SuppressLint("MissingPermission")
-@Composable
-fun DeviceItem(deviceItem: BluetoothDeviceItem) {
-    /*
-    Card: A Compose UI element that provides an elevated card-like appearance.
-    It's commonly used to distinguish elements visually from their background.
-Modifier.fillMaxWidth(): This modifier ensures the card fills the maximum available width of its parent container.
-Modifier.padding(vertical = 8.dp): Applies vertical padding inside the card to increase the spacing
-above and below the content for better touch targets and visual separation.
-     */
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp) // Increased vertical padding for better tap targets and spacing
-    ) {
-        /*
-        Row: A layout composable that places its children in a horizontal sequence.
-        Here, it's used to align text elements side by side (if there were multiple columns or additional icons,
-        they would be laid out here).
-        Modifier.padding(16.dp): Applies padding around the content inside the row for spacing from the card edges.
-        Modifier.alpha(0.7f): Sets the opacity of the entire row to 70%, making the text and other contents slightly
-        transparent for a subdued look.
-        Modifier.fillMaxWidth(): Ensures the row uses the full width available within the card.
-        verticalAlignment = Alignment.CenterVertically:
-            Aligns the children of the row vertically in the center.
-         */
-        Row(
-            modifier = Modifier
-                .padding(16.dp)
-                .alpha(0.7f) // Set a higher opacity for better readability while keeping the faded look
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            /*
-            Column: A layout composable that places its children vertically.
-            In this case, it's used to stack the device name on top of the device address.
-            Modifier.weight(1f): In a row, this makes the column take
-            up all available space that isn't used by other elements.
-            Text: Composables that display text. The first Text shows the device's name,
-            and the second shows its address.
-            text = deviceItem.device.name ?: "Unnamed Device": Displays the name of the device.
-            If the name is null, it defaults to "Unnamed Device".
-            fontWeight, fontSize, color: Styling properties to customize the appearance of the text.
-            fontWeight = FontWeight.Bold makes the text bold.
-            style = MaterialTheme.typography.bodySmall: Applies a predefined text style,
-            making it smaller than the default.
-            color = MaterialTheme.colorScheme.onSurfaceVariant:
-                Uses a color defined in the theme that's designed to contrast less with the background than the primary text color.
-            modifier = Modifier.alpha(0.8f): Makes the address text slightly more opaque than the rest of the row.
-             */
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = deviceItem.device.name ?: "Unnamed Device",
-                    fontWeight = FontWeight.Bold, // Make it bold to stand out more
-                    fontSize = 18.sp, // Slightly larger for better visibility
-                    color = MaterialTheme.colorScheme.onSurface, // Use theme color for text
-                    modifier = Modifier.padding(bottom = 4.dp) // Add padding for separation from the address
-                )
-                Text(
-                    text = deviceItem.device.address,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant, // A variant for less emphasis
-                    modifier = Modifier.alpha(0.8f) // Slightly higher opacity for the address
-                )
-            }
-        }
-    }
-}
 
-/*
-This is a helper function used to start the discovery of Bluetooth devices:
-Checks and Starts Discovery: It first checks if the Bluetooth adapter is not
-null and if the discovery process isn't already running (isDiscovering).
-If these conditions are met, it starts the Bluetooth discovery.
- */
-@SuppressLint("MissingPermission")
-private fun startDiscovery(bluetoothAdapter: BluetoothAdapter?, isDiscovering: MutableState<Boolean>) {
-    if (bluetoothAdapter != null && !isDiscovering.value) {
-        isDiscovering.value = bluetoothAdapter.startDiscovery()
-    }
-}
 /*
 Summary::
 In essence, your code sets up a user interface to scan for and display Bluetooth
