@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.nfkhusq.Screens.BluetoothLeScanner
 import com.example.nfkhusq.Permissions.BluetoothPermissions
 import com.example.nfkhusq.Permissions.LocationPermission
 
@@ -27,10 +28,13 @@ fun Navpage() {
         composable("startPage") { StartPage(navController) }
         composable("LocationPermission") { LocationPermission(navController) }
         composable("BluetoothPermission") { BluetoothPermissions(navController) }
+        composable("BluetoothLEScanner") { BluetoothLeScanner(navController)}
         // Default or error composable
         composable("error") {
             Column(
-                modifier = Modifier.fillMaxSize().padding(16.dp),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {

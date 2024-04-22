@@ -3,7 +3,6 @@ package com.example.nfkhusq.Permissions
 import android.Manifest
 import android.content.Context
 import android.os.Build
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -41,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.nfkhusq.ui.theme.NFKHUSQTheme
+import timber.log.Timber
 
 
 @RequiresApi(Build.VERSION_CODES.S)
@@ -59,10 +59,10 @@ fun BluetoothPermissions(navController: NavController) {
         isBluetoothPermissionGranted = granted
         sharedPreferences.edit().putBoolean("BLUETOOTH_PERMISSION_GRANTED", granted).apply()
         if (granted) {
-            Log.d("BluetoothPermissions", "Bluetooth connect permission granted.")
+            Timber.d("BluetoothPermissions", "Bluetooth connect permission granted.")
         } else {
             Toast.makeText(context, "Bluetooth connect permission is required.", Toast.LENGTH_LONG).show()
-            Log.d("BluetoothPermissions", "Bluetooth connect permission not granted.")
+            Timber.d("BluetoothPermissions", "Bluetooth connect permission not granted.")
         }
     }
 
@@ -101,12 +101,11 @@ fun BluetoothPermissions(navController: NavController) {
                         )
                     }
                 },
-                enabled = !isBluetoothPermissionGranted ,
+                enabled = !isBluetoothPermissionGranted,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = if (isBluetoothPermissionGranted) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3F) else MaterialTheme.colorScheme.primary,
                     contentColor = if (isBluetoothPermissionGranted) MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.3F) else MaterialTheme.colorScheme.onPrimary
                 ),
-
                 contentPadding = PaddingValues(horizontal = 32.dp, vertical = 12.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -126,9 +125,25 @@ fun BluetoothPermissions(navController: NavController) {
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
+
+            if (isBluetoothPermissionGranted) {
+                Button(
+                    onClick = {
+                        Timber.d("Navigation", "Attempting to navigate to BluetoothLEScanner")
+                        navController.navigate("BluetoothLEScanner")
+                    },
+                    modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+                ) {
+                    Text("Go to Bluetooth Scanner", fontWeight = FontWeight.Bold)
+                }
+
+            }
         }
     }
 }
+
+
 
 
 @RequiresApi(Build.VERSION_CODES.S)

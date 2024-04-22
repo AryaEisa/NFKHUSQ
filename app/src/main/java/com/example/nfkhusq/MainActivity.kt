@@ -18,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.example.nfkhusq.Bluetooth.BluetoothLeScanner
 import com.example.nfkhusq.ui.theme.NFKHUSQTheme
 
 
@@ -61,7 +60,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             NFKHUSQTheme {
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    BluetoothLeScanner()
+                    //BluetoothLeScanner()
+                    Navpage()
+
                 }
             }
         }
