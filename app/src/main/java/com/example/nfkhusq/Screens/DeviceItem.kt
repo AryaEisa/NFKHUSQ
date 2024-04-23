@@ -3,9 +3,6 @@ package com.example.nfkhusq.Screens
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.content.Context
-import android.os.Build
-import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,12 +28,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-@RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("MissingPermission")
 @Composable
-fun DeviceItem(deviceItem: BluetoothDeviceItem, context: Context,bluetoothAdapter: BluetoothAdapter?) {
+fun DeviceItem(deviceItem: BluetoothDeviceItem, context: Context,bluetoothAdapter: BluetoothAdapter) {
     var isConnecting by remember { mutableStateOf(false) }
-
     /*
     Card: A Compose UI element that provides an elevated card-like appearance.
     It's commonly used to distinguish elements visually from their background.
@@ -44,7 +39,7 @@ Modifier.fillMaxWidth(): This modifier ensures the card fills the maximum availa
 Modifier.padding(vertical = 8.dp): Applies vertical padding inside the card to increase the spacing
 above and below the content for better touch targets and visual separation.
      */
-    /*Card(
+    Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp) // Increased vertical padding for better tap targets and spacing
@@ -55,7 +50,7 @@ above and below the content for better touch targets and visual separation.
                 }
             })
             .alpha(0.7f),
-    ) {*/
+    )  {
         /*
         Row: A layout composable that places its children in a horizontal sequence.
         Here, it's used to align text elements side by side (if there were multiple columns or additional icons,
@@ -67,27 +62,6 @@ above and below the content for better touch targets and visual separation.
         verticalAlignment = Alignment.CenterVertically:
             Aligns the children of the row vertically in the center.
          */
-
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)
-            .clickable(enabled = !isConnecting, onClick = {
-                isConnecting = true
-                connectToDevice(deviceItem.device, context, bluetoothAdapter) { success ->
-                    isConnecting = false
-                    if (success) {
-                        Log.d("BluetoothConnect", "Connection successful")
-                    } else {
-                        Log.d("BluetoothConnect", "Failed to connect")
-                    }
-                }
-            })
-            .alpha(if (isConnecting) 0.7f else 1f),
-    ) {
-
-
-
         Row(
             modifier = Modifier
                 .padding(16.dp)
@@ -115,16 +89,16 @@ above and below the content for better touch targets and visual separation.
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = deviceItem.device.name ?: "Unnamed Device",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.padding(bottom = 4.dp)
+                    fontWeight = FontWeight.Bold, // Make it bold to stand out more
+                    fontSize = 18.sp, // Slightly larger for better visibility
+                    color = MaterialTheme.colorScheme.onSurface, // Use theme color for text
+                    modifier = Modifier.padding(bottom = 4.dp) // Add padding for separation from the address
                 )
                 Text(
                     text = deviceItem.device.address,
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.alpha(0.8f)
+                    color = MaterialTheme.colorScheme.onSurfaceVariant, // A variant for less emphasis
+                    modifier = Modifier.alpha(0.8f) // Slightly higher opacity for the address
                 )
             }
             if (isConnecting) {
@@ -132,16 +106,12 @@ above and below the content for better touch targets and visual separation.
             } else {
                 Button(
                     onClick = {
-                        isConnecting = true
-                        connectToDevice(deviceItem.device, context, bluetoothAdapter) { success ->
-                            isConnecting = false
-                            if (success) {
-                                Log.d("BluetoothConnect", "Connection successful")
-                            } else {
-                                Log.d("BluetoothConnect", "Failed to connect")
-                            }
+                        isConnecting = true  // Start connecting and show progress
+                        connectToDevice(deviceItem.device, context, bluetoothAdapter) {
+                            isConnecting = false  // Reset connection state once completed
                         }
-                    },
+                    }
+                    ,
                     colors = ButtonDefaults.buttonColors(
                         contentColor = MaterialTheme.colorScheme.onBackground
                     )
@@ -151,7 +121,6 @@ above and below the content for better touch targets and visual separation.
             }
         }
     }
-
 }
 /*
 This is a helper function used to start the discovery of Bluetooth devices:

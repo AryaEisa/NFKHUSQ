@@ -6,17 +6,6 @@
         android:maxSdkVersion="30" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"
         android:maxSdkVersion="30" />
-    <uses-permission android:name="android.permission.REQUEST_COMPANION_RUN_IN_BACKGROUND"/>
-    <uses-permission android:name="android.permission.REQUEST_COMPANION_USE_DATA_IN_BACKGROUND"/>
-    <uses-permission android:name="android.permission.REQUEST_COMPANION_SELF_MANAGED"
-        tools:ignore="ProtectedPermissions" />
-    <uses-permission android:name="android.permission.REQUEST_COMPANION_START_FOREGROUND_SERVICES_FROM_BACKGROUND"/>
-    <uses-permission android:name="android.permission.REQUEST_COMPANION_PROFILE_WATCH"/>
-    <uses-permission android:name="android.permission.REQUEST_COMPANION_PROFILE_COMPUTER"
-        tools:ignore="ProtectedPermissions" />
-    <uses-permission android:name="android.permission.REQUEST_COMPANION_PROFILE_AUTOMOTIVE_PROJECTION"/>
-    <uses-permission android:name="android.permission.REQUEST_COMPANION_PROFILE_APP_STREAMING"
-        tools:ignore="ProtectedPermissions" />
 
     <!-- Needed only if your app looks for Bluetooth devices.
          If your app doesn't use Bluetooth scan results to derive physical

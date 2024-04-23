@@ -3,9 +3,8 @@ package com.example.nfkhusq.Screens
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
-import android.bluetooth.BluetoothSocket
 import android.content.Context
-import android.util.Log
+import android.widget.Toast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -13,48 +12,26 @@ import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.util.UUID
 
-@SuppressLint("MissingPermission")
-fun connectToDevice(
-    device: BluetoothDevice,
-    context: Context,
-    bluetoothAdapter: BluetoothAdapter?,
-    onConnectionComplete: (Boolean) -> Unit
-) {
-    if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled) {
-        Log.e("BluetoothConnect", "Bluetooth is disabled or not available.")
-        onConnectionComplete(false)
-        return
-    }
 
-    val uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")  // Standard SPP UUID for most Bluetooth modules
+@SuppressLint("MissingPermission")
+fun connectToDevice(device: BluetoothDevice, context: Context, bluetoothAdapter: BluetoothAdapter,onConnectionComplete: () -> Unit) {
     CoroutineScope(Dispatchers.IO).launch {
-        var socket: BluetoothSocket? = null
         try {
-            socket = device.createRfcommSocketToServiceRecord(uuid)
+            val uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
+            val socket = device.createRfcommSocketToServiceRecord(uuid)
             bluetoothAdapter.cancelDiscovery()
             socket.connect()
-            Log.d("BluetoothConnect", "Successfully connected to ${device.address}")
+            socket.close() // Only close after you're done with the connection
             withContext(Dispatchers.Main) {
-                onConnectionComplete(true)
+                Toast.makeText(context, "Connected to ${device.name}", Toast.LENGTH_SHORT).show()
             }
         } catch (e: IOException) {
-            Log.e("BluetoothConnect", "Failed to connect to ${device.address}", e)
-            socket?.closeQuietly()
             withContext(Dispatchers.Main) {
-                onConnectionComplete(false)
+                Toast.makeText(context, "Failed to connect: ${e.message}", Toast.LENGTH_LONG).show()
             }
         }
     }
 }
-
-fun BluetoothSocket?.closeQuietly() {
-    try {
-        this?.close()
-    } catch (e: IOException) {
-        Log.e("BluetoothConnect", "Could not close the client socket", e)
-    }
-}
-
 
 
 /*
