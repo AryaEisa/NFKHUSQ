@@ -8,13 +8,19 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -25,6 +31,7 @@ import androidx.compose.ui.unit.sp
 @SuppressLint("MissingPermission")
 @Composable
 fun DeviceItem(deviceItem: BluetoothDeviceItem, context: Context,bluetoothAdapter: BluetoothAdapter) {
+    var isConnecting by remember { mutableStateOf(false) }
     /*
     Card: A Compose UI element that provides an elevated card-like appearance.
     It's commonly used to distinguish elements visually from their background.
@@ -36,7 +43,12 @@ above and below the content for better touch targets and visual separation.
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp) // Increased vertical padding for better tap targets and spacing
-            .clickable(onClick = { connectToDevice(deviceItem.device, context, bluetoothAdapter) })
+            .clickable(onClick = {
+                isConnecting = true  // Start connecting and show progress
+                connectToDevice(deviceItem.device, context, bluetoothAdapter) {
+                    isConnecting = false  // Reset connection state once completed
+                }
+            })
             .alpha(0.7f),
     ) {
         /*
@@ -89,18 +101,27 @@ above and below the content for better touch targets and visual separation.
                     modifier = Modifier.alpha(0.8f) // Slightly higher opacity for the address
                 )
             }
-            Button(
-                onClick = { connectToDevice(deviceItem.device, context, bluetoothAdapter) },
-                colors = ButtonDefaults.buttonColors(
-                    contentColor = MaterialTheme.colorScheme.onBackground
-                )
-            ) {
-                Text("Connect}")
+            if (isConnecting) {
+                CircularProgressIndicator(modifier = Modifier.size(24.dp))
+            } else {
+                Button(
+                    onClick = {
+                        isConnecting = true  // Start connecting and show progress
+                        connectToDevice(deviceItem.device, context, bluetoothAdapter) {
+                            isConnecting = false  // Reset connection state once completed
+                        }
+                    }
+                    ,
+                    colors = ButtonDefaults.buttonColors(
+                        contentColor = MaterialTheme.colorScheme.onBackground
+                    )
+                ) {
+                    Text("Connect")
+                }
             }
         }
     }
 }
-
 /*
 This is a helper function used to start the discovery of Bluetooth devices:
 Checks and Starts Discovery: It first checks if the Bluetooth adapter is not

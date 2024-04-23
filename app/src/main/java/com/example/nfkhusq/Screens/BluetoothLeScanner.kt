@@ -83,30 +83,7 @@ in Android 12 and above.
         }
     )
 
-/*
-This is a component that listens for Bluetooth devices being found nearby.
-If a device is found and it has a name, it adds the device to the list bluetoothDevices.
- */
-    val bluetoothReceiver = remember {
-        object : BroadcastReceiver() {
-            override fun onReceive(context: Context?, intent: Intent?) {
-                when (intent?.action) {
-                    BluetoothDevice.ACTION_FOUND -> {
-                        intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)?.let { device ->
-                            val existingDevice = bluetoothDevices.firstOrNull { it.device.address == device.address }
-                            if (device.name != null) {
-                                if (existingDevice != null) {
-                                    existingDevice.lastSeen = Instant.now()
-                                } else {
-                                    bluetoothDevices.add(BluetoothDeviceItem(device, Instant.now()))
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+
 /*
 This ensures that the Bluetooth receiver is registered when the UI is visible and
 unregistered when the UI is no longer in use, helping to manage resources efficiently
@@ -114,6 +91,11 @@ and avoid memory leaks.
  */
     DisposableEffect(context) {
         val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
+        /*
+This is a component that listens for Bluetooth devices being found nearby.
+If a device is found and it has a name, it adds the device to the list bluetoothDevices.
+ */
+
         val bluetoothReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 intent?.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)?.let { device ->
