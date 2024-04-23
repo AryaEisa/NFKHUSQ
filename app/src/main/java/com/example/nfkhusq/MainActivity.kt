@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.nfkhusq.ui.theme.NFKHUSQTheme
+import android.Manifest
 
 
 /*
@@ -45,10 +46,14 @@ class MainActivity : ComponentActivity() {
         bluetoothAdapter = bluetoothManager.adapter
 
         val bluetoothScanPermission = android.Manifest.permission.BLUETOOTH_SCAN
+        val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
 
         // Check if the permission is already granted
         if (ContextCompat.checkSelfPermission(this, bluetoothScanPermission) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, arrayOf(bluetoothScanPermission), REQUEST_BLUETOOTH_SCAN)
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_LOCATION_PERMISSION)
         }
 
         // Check if Bluetooth is enabled
@@ -78,9 +83,16 @@ class MainActivity : ComponentActivity() {
         when (requestCode) {
             REQUEST_BLUETOOTH_SCAN -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // Permission granted, perform Bluetooth scanning or other actions
+                    // Permission for Bluetooth scanning granted
                 } else {
-                    // Permission denied, handle accordingly
+                    // Permission for Bluetooth scanning denied
+                }
+            }
+            REQUEST_LOCATION_PERMISSION -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission for location granted
+                } else {
+                    // Permission for location denied
                 }
             }
         }
@@ -89,6 +101,9 @@ class MainActivity : ComponentActivity() {
     companion object {
         private const val REQUEST_ENABLE_BT = 1
         private const val REQUEST_BLUETOOTH_SCAN = 2
+        private const val REQUEST_LOCATION_PERMISSION = 3
+        private const val ACCESS_FINE_LOCATION = 4
+
     }
 }
 
