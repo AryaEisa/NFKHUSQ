@@ -64,12 +64,12 @@ fun BluetoothLeScanner() {
     //isDiscovering: A state to keep track of whether the app is currently discovering devices.
     val isDiscovering = remember { mutableStateOf(false) }
     remember { mutableListOf<BluetoothDevice>() }
-/*
-A permission launcher is set up to request the BLUETOOTH_CONNECT permission if
-it's not already granted. This is essential for accessing Bluetooth capabilities
-in Android 12 and above.
+    /*
+    A permission launcher is set up to request the BLUETOOTH_CONNECT permission if
+    it's not already granted. This is essential for accessing Bluetooth capabilities
+    in Android 12 and above.
 
- */
+     */
 
     // Permission launcher
     val permissionLauncher = rememberLauncherForActivityResult(
@@ -84,11 +84,11 @@ in Android 12 and above.
     )
 
 
-/*
-This ensures that the Bluetooth receiver is registered when the UI is visible and
-unregistered when the UI is no longer in use, helping to manage resources efficiently
-and avoid memory leaks.
- */
+    /*
+    This ensures that the Bluetooth receiver is registered when the UI is visible and
+    unregistered when the UI is no longer in use, helping to manage resources efficiently
+    and avoid memory leaks.
+     */
     DisposableEffect(context) {
         val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
         /*
@@ -127,37 +127,37 @@ If a device is found and it has a name, it adds the device to the list bluetooth
             startDiscovery(bluetoothAdapter, isDiscovering)
         }
     }
-/*
-    LaunchedEffect(key1 = Unit) {
-        while (isActive) {
-            if (ContextCompat.checkSelfPermission(
-                    context,
-                    Manifest.permission.BLUETOOTH_CONNECT
-                ) == PackageManager.PERMISSION_GRANTED
-            ) {
+    /*
+        LaunchedEffect(key1 = Unit) {
+            while (isActive) {
+                if (ContextCompat.checkSelfPermission(
+                        context,
+                        Manifest.permission.BLUETOOTH_CONNECT
+                    ) == PackageManager.PERMISSION_GRANTED
+                ) {
+                    bluetoothAdapter?.cancelDiscovery()
+                    isDiscovering.value = bluetoothAdapter?.startDiscovery() ?: false
+                }
+
+                delay(2000)  // Typical discovery time
+
                 bluetoothAdapter?.cancelDiscovery()
-                isDiscovering.value = bluetoothAdapter?.startDiscovery() ?: false
+                isDiscovering.value = false
+
+                // Cleanup old devices
+                val currentTime = Instant.now()
+                bluetoothDevices.removeAll {
+                    currentTime.minusSeconds(12).isAfter(it.lastSeen)
+                } // Remove devices not seen in the last scan
             }
-
-            delay(2000)  // Typical discovery time
-
-            bluetoothAdapter?.cancelDiscovery()
-            isDiscovering.value = false
-
-            // Cleanup old devices
-            val currentTime = Instant.now()
-            bluetoothDevices.removeAll {
-                currentTime.minusSeconds(12).isAfter(it.lastSeen)
-            } // Remove devices not seen in the last scan
         }
-    }
 
- */
-/*
-A scaffold structure with a top app bar displaying the title "Bluetooth Scanner".
-Inside the scaffold, there's a column layout that lists all discovered Bluetooth
-devices using a LazyColumn, which is efficient for displaying lists of data.
- */
+     */
+    /*
+    A scaffold structure with a top app bar displaying the title "Bluetooth Scanner".
+    Inside the scaffold, there's a column layout that lists all discovered Bluetooth
+    devices using a LazyColumn, which is efficient for displaying lists of data.
+     */
     Scaffold(
         topBar = {
             TopAppBar(
