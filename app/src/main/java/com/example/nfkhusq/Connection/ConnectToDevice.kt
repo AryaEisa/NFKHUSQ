@@ -16,7 +16,12 @@ import java.util.UUID
 
 
 @SuppressLint("MissingPermission")
-fun connectToDevice(device: BluetoothDevice, context: Context, bluetoothAdapter: BluetoothAdapter, onConnectionComplete: (Boolean) -> Unit) {
+fun connectToDevice(
+    device: BluetoothDevice,
+    context: Context,
+    bluetoothAdapter: BluetoothAdapter,
+    onConnectionComplete: (Boolean, BluetoothSocket?) -> Unit
+) {
     CoroutineScope(Dispatchers.IO).launch {
         val classicUuids = listOf(
             "00001101-0000-1000-8000-00805F9B34FB",  // Serial Port Profile (SPP)
@@ -38,28 +43,23 @@ fun connectToDevice(device: BluetoothDevice, context: Context, bluetoothAdapter:
         var socket: BluetoothSocket? = null
         var connected = false
 
-        // Try connecting using classic Bluetooth UUIDs
-        for (uuidString in classicUuids) {
-            val uuid = UUID.fromString(uuidString)
-            try {
-                socket = device.createRfcommSocketToServiceRecord(uuid)
-                socket.connect()
-                connected = true
-                break  // Connection successful, exit the loop
-            } catch (e: IOException) {
-                // Connection failed, try the next UUID
-                Log.e("BluetoothConnection", "Failed to connect with UUID $uuidString: ${e.message}")
+        try {
+            for (uuidString in classicUuids) {
+                try {
+                    val uuid = UUID.fromString(uuidString)
+                    socket = device.createRfcommSocketToServiceRecord(uuid)
+                    socket.connect()
+                    connected = true
+                    break
+                } catch (e: IOException) {
+                    Log.e("BluetoothConnection", "Failed to connect with UUID $uuidString: ${e.message}")
+                }
             }
-        }
 
         // If classic Bluetooth connection failed, try BLE connection
         if (!connected) {
             for (uuid in bleUuids) {
                 try {
-                    // Use BLE-specific connection method here
-                    // For example, use BluetoothGatt for BLE connections
-                    // socket = device.connectGatt(context, false, bluetoothGattCallback)
-                    // Implement BluetoothGattCallback to handle connection events
                     connected = true
                     break
                 } catch (e: IOException) {
@@ -67,19 +67,26 @@ fun connectToDevice(device: BluetoothDevice, context: Context, bluetoothAdapter:
                 }
             }
         }
-
-        withContext(Dispatchers.Main) {
-            if (connected) {
-                println("Connected to ${device.name}")
-                Toast.makeText(context, "Connected to ${device.name}", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(context, "Failed to connect to ${device.name}", Toast.LENGTH_LONG).show()
+        } catch (e: Exception) {
+            socket?.close()
+            socket = null
+            Log.e("BluetoothConnection", "Exception in connection: ${e.message}")
+        } finally {
+            withContext(Dispatchers.Main) {
+                Toast.makeText(context, if (connected) "Connected to ${device.name}" else "Failed to connect to ${device.name}", Toast.LENGTH_SHORT).show()
+                onConnectionComplete(connected, socket)
             }
-            onConnectionComplete(connected)
         }
-
-        // Close the socket if it was opened
-        socket?.close()
+    }
+}
+fun disconnectDevice(socket: BluetoothSocket?) {
+    CoroutineScope(Dispatchers.IO).launch {
+        try {
+            socket?.close()
+            println("Disconnected from device")
+        } catch (e: IOException) {
+            Log.e("BluetoothDisconnect", "Failed to close connection: ${e.message}")
+        }
     }
 }
 

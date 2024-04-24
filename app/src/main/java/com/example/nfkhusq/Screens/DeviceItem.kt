@@ -44,9 +44,9 @@ above and below the content for better touch targets and visual separation.
             .fillMaxWidth()
             .padding(vertical = 8.dp) // Increased vertical padding for better tap targets and spacing
             .clickable(onClick = {
-                isConnecting = true  // Start connecting and show progress
-                connectToDevice(deviceItem.device, context, bluetoothAdapter) {
-                    isConnecting = false  // Reset connection state once completed
+                isConnecting = true
+                connectToDevice(deviceItem.device, context, bluetoothAdapter) { _, _ ->
+                    isConnecting = false
                 }
             })
             .alpha(0.7f),
@@ -106,9 +106,9 @@ above and below the content for better touch targets and visual separation.
             } else {
                 Button(
                     onClick = {
-                        isConnecting = true  // Start connecting and show progress
-                        connectToDevice(deviceItem.device, context, bluetoothAdapter) {
-                            isConnecting = false  // Reset connection state once completed
+                        isConnecting = true
+                        connectToDevice(deviceItem.device, context, bluetoothAdapter) { isConnected, _ ->
+                            isConnecting = false
                         }
                     }
                     ,

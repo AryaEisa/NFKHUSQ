@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.example.nfkhusq
 
 import android.os.Build
