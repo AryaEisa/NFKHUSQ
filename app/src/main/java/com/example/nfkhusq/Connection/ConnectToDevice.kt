@@ -1,11 +1,12 @@
 package com.example.nfkhusq.Connection
-
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import android.content.Context
 import android.widget.Toast
+import com.example.nfkhusq.Screens.addConnectedDevice
+import com.example.nfkhusq.Screens.removeDisconnectedDevice
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -53,6 +54,7 @@ fun connectToDevice(
                     connected = true
                     break
                 } catch (e: IOException) {
+                    println("Failed to connect with UUID " + uuidString + ": " + e.message)
                     Timber.e("Failed to connect with UUID " + uuidString + ": " + e.message)
                 }
             }
@@ -61,9 +63,11 @@ fun connectToDevice(
         if (!connected) {
             for (uuid in bleUuids) {
                 try {
+                    socket?.connect()
                     connected = true
                     break
                 } catch (e: IOException) {
+                    println("Failed to connect with BLE UUID " + uuid + ": " + e.message)
                     Timber.e("Failed to connect with BLE UUID " + uuid + ": " + e.message)
                 }
             }
@@ -76,6 +80,9 @@ fun connectToDevice(
             withContext(Dispatchers.Main) {
                 Toast.makeText(context, if (connected) "Connected to ${device.name}" else "Failed to connect to ${device.name}", Toast.LENGTH_SHORT).show()
                 onConnectionComplete(connected, socket)
+                if (connected){
+                    addConnectedDevice(device)
+                }
             }
         }
         while (connected) {
@@ -88,6 +95,7 @@ fun connectToDevice(
                     // Disconnection detected
                     connected = false
                     println("Disconnected from ${device.name}")
+                    removeDisconnectedDevice(device)
                     break
                 } else {
                     println("Still connected to ${device.name}")
@@ -96,6 +104,7 @@ fun connectToDevice(
                 // Disconnection detected
                 connected = false
                 println("Disconnected from ${device.name}: ${e.message}")
+                removeDisconnectedDevice(device)
                 break
             }
         }

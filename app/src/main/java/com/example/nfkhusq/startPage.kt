@@ -96,6 +96,9 @@ fun StartPage(navController: NavController) {
                 Spacer(Modifier.width(8.dp))
                 Text("Bluetooth Permissions")
             }
+
+
+
         }
     }
 }
