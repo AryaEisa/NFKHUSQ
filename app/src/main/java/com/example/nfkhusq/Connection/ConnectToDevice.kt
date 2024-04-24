@@ -1,16 +1,17 @@
-package com.example.nfkhusq.Screens
+package com.example.nfkhusq.Connection
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import java.io.IOException
 import java.util.UUID
 
@@ -52,7 +53,7 @@ fun connectToDevice(
                     connected = true
                     break
                 } catch (e: IOException) {
-                    Log.e("BluetoothConnection", "Failed to connect with UUID $uuidString: ${e.message}")
+                    Timber.e("Failed to connect with UUID " + uuidString + ": " + e.message)
                 }
             }
 
@@ -63,18 +64,27 @@ fun connectToDevice(
                     connected = true
                     break
                 } catch (e: IOException) {
-                    Log.e("BluetoothConnection", "Failed to connect with BLE UUID $uuid: ${e.message}")
+                    Timber.e("Failed to connect with BLE UUID " + uuid + ": " + e.message)
                 }
             }
         }
         } catch (e: Exception) {
             socket?.close()
             socket = null
-            Log.e("BluetoothConnection", "Exception in connection: ${e.message}")
+            Timber.e("Exception in connection: " + e.message)
         } finally {
             withContext(Dispatchers.Main) {
                 Toast.makeText(context, if (connected) "Connected to ${device.name}" else "Failed to connect to ${device.name}", Toast.LENGTH_SHORT).show()
                 onConnectionComplete(connected, socket)
+            }
+        }
+        while (connected){
+            delay(3000)
+            if (socket == null || !socket.isConnected){
+                println("Disconnected from ${device.name}")
+                connected = false
+            } else {
+                println("Still Connected to ${device.name}")
             }
         }
     }
@@ -85,7 +95,7 @@ fun disconnectDevice(socket: BluetoothSocket?) {
             socket?.close()
             println("Disconnected from device")
         } catch (e: IOException) {
-            Log.e("BluetoothDisconnect", "Failed to close connection: ${e.message}")
+            Timber.e("Failed to close connection: " + e.message)
         }
     }
 }
