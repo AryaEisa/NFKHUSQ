@@ -78,13 +78,25 @@ fun connectToDevice(
                 onConnectionComplete(connected, socket)
             }
         }
-        while (connected){
+        while (connected) {
             delay(3000)
-            if (socket == null || !socket.isConnected){
-                println("Disconnected from ${device.name}")
+            try {
+                // Attempt to read from the input stream to detect disconnection
+                val buffer = ByteArray(1)
+                val bytesRead = socket?.inputStream?.read(buffer)
+                if (bytesRead == -1) {
+                    // Disconnection detected
+                    connected = false
+                    println("Disconnected from ${device.name}")
+                    break
+                } else {
+                    println("Still connected to ${device.name}")
+                }
+            } catch (e: IOException) {
+                // Disconnection detected
                 connected = false
-            } else {
-                println("Still Connected to ${device.name}")
+                println("Disconnected from ${device.name}: ${e.message}")
+                break
             }
         }
     }
