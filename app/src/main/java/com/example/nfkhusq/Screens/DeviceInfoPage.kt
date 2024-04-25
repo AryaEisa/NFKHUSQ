@@ -19,8 +19,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 
@@ -51,6 +53,7 @@ fun InfoPage() {
         color = Color.Black
     ) {
         Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top, // Align header to top
             modifier = Modifier.padding(top = 16.dp, bottom = 16.dp) // Add padding for content
         ) {
@@ -58,13 +61,14 @@ fun InfoPage() {
                 text = "Connected Devices",
                 style = MaterialTheme.typography.bodySmall, // Use h6 for section header
                 modifier = Modifier.padding(horizontal = 16.dp) // Add horizontal padding for title
+                ,color = Color.White
             )
             if (connectedDevices.isEmpty()) {
                 // Display a placeholder message for no devices
                 Text(
                     text = "No connected devices found.",
                     style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.run { padding(horizontal = 16.dp) }
+                    modifier = Modifier.run { padding(horizontal = 16.dp) }, color = Color.White
                 )
             } else {
                 LazyColumn(contentPadding = PaddingValues(16.dp)) {
@@ -114,3 +118,8 @@ fun DeviceInfo(device: BluetoothDevice) {
 }
 
 
+@Preview
+@Composable
+private fun rr() {
+    InfoPage()
+}

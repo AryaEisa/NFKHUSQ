@@ -2,6 +2,9 @@ package com.example.nfkhusq.Connection
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothGatt
+import android.bluetooth.BluetoothGattCallback
+import android.bluetooth.BluetoothProfile
 import android.bluetooth.BluetoothSocket
 import android.content.Context
 import android.widget.Toast
@@ -34,10 +37,21 @@ fun connectToDevice(
         )
 
         val bleUuids = listOf(
-            UUID.fromString("00001800-0000-1000-8000-00805F9B34FB"),  // Generic Access Profile (GAP)
-            UUID.fromString("00001801-0000-1000-8000-00805F9B34FB"),  // Generic Attribute Profile (GATT)
-            UUID.fromString("0000FFE0-0000-1000-8000-00805F9B34FB")   // Custom BLE service UUID
-            // Add more BLE service UUIDs as needed
+            UUID.fromString("0000180D-0000-1000-8000-00805F9B34FB"), // Heart Rate Service
+            UUID.fromString("0000180A-0000-1000-8000-00805F9B34FB"), // Device Information Service
+            UUID.fromString("0000180F-0000-1000-8000-00805F9B34FB"), // Battery Service
+            UUID.fromString("00001802-0000-1000-8000-00805F9B34FB"), // Immediate Alert Service
+            UUID.fromString("00001805-0000-1000-8000-00805F9B34FB"), // Current Time Service
+            UUID.fromString("00001816-0000-1000-8000-00805F9B34FB"), // Cycling Speed and Cadence Service
+            UUID.fromString("00001811-0000-1000-8000-00805F9B34FB"), // Alert Notification Service
+            UUID.fromString("00001812-0000-1000-8000-00805F9B34FB"), // Human Interface Device (HID) Service
+            UUID.fromString("0000180E-0000-1000-8000-00805F9B34FB"), // Phone Alert Status Service
+            UUID.fromString("0000180B-0000-1000-8000-00805F9B34FB"), // Network Availability Service
+            UUID.fromString("00001815-0000-1000-8000-00805F9B34FB"), // Automation IO Service
+            UUID.fromString("00001804-0000-1000-8000-00805F9B34FB"), // Tx Power Service
+            UUID.fromString("00001818-0000-1000-8000-00805F9B34FB"), // Cycling Power Service
+            UUID.fromString("00001819-0000-1000-8000-00805F9B34FB")  // Location and Navigation Service
+
         )
 
         bluetoothAdapter.cancelDiscovery()
@@ -45,6 +59,31 @@ fun connectToDevice(
         var socket: BluetoothSocket? = null
         var connected = false
 
+        // If classic Bluetooth connection failed, try BLE connection
+        if (!connected) {
+            val gattCallback = object : BluetoothGattCallback() {
+                override fun onConnectionStateChange(gatt: BluetoothGatt?, status: Int, newState: Int) {
+                    super.onConnectionStateChange(gatt, status, newState)
+                    if (newState == BluetoothProfile.STATE_CONNECTED) {
+                        connected = true
+                        gatt?.discoverServices() // Optionally discover services here
+                        addConnectedDevice(device)
+                    } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+                        connected = false
+                        gatt?.close()
+                        removeDisconnectedDevice(device)
+                    }
+
+                    // Update UI on the main thread
+                    CoroutineScope(Dispatchers.Main).launch {
+                        onConnectionComplete(connected, null) // Note the null, as there's no BluetoothSocket for BLE
+                        Toast.makeText(context, if (connected) "Connected to ${device.name}" else "Failed to connect to ${device.name}", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+
+            device.connectGatt(context, false, gattCallback)
+        }
         try {
             for (uuidString in classicUuids) {
                 try {
@@ -59,24 +98,12 @@ fun connectToDevice(
                 }
             }
 
-        // If classic Bluetooth connection failed, try BLE connection
-        if (!connected) {
-            for (uuid in bleUuids) {
-                try {
-                    socket?.connect()
-                    connected = true
-                    break
-                } catch (e: IOException) {
-                    println("Failed to connect with BLE UUID " + uuid + ": " + e.message)
-                    Timber.e("Failed to connect with BLE UUID " + uuid + ": " + e.message)
-                }
-            }
-        }
         } catch (e: Exception) {
             socket?.close()
             socket = null
             Timber.e("Exception in connection: " + e.message)
-        } finally {
+        }
+        finally {
             withContext(Dispatchers.Main) {
                 Toast.makeText(context, if (connected) "Connected to ${device.name}" else "Failed to connect to ${device.name}", Toast.LENGTH_SHORT).show()
                 onConnectionComplete(connected, socket)
@@ -87,10 +114,12 @@ fun connectToDevice(
         }
         while (connected) {
             delay(3000)
+
             try {
                 // Attempt to read from the input stream to detect disconnection
                 val buffer = ByteArray(1)
                 val bytesRead = socket?.inputStream?.read(buffer)
+
                 if (bytesRead == -1) {
                     // Disconnection detected
                     connected = false
@@ -98,6 +127,7 @@ fun connectToDevice(
                     removeDisconnectedDevice(device)
                     break
                 } else {
+
                     println("Still connected to ${device.name}")
                 }
             } catch (e: IOException) {
