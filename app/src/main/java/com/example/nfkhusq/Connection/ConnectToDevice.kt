@@ -4,12 +4,13 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCallback
+import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.BluetoothProfile
 import android.bluetooth.BluetoothSocket
 import android.content.Context
 import android.widget.Toast
-import com.example.nfkhusq.Screens.addConnectedDevice
-import com.example.nfkhusq.Screens.removeDisconnectedDevice
+import com.example.nfkhusq.Connection.addConnectedDevice
+import com.example.nfkhusq.Connection.removeDisconnectedDevice
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -36,6 +37,7 @@ fun connectToDevice(
             "00001105-0000-1000-8000-00805F9B34FB"   // Object Push Profile (OPP)
         )
 
+/*
         val bleUuids = listOf(
             UUID.fromString("0000180D-0000-1000-8000-00805F9B34FB"), // Heart Rate Service
             UUID.fromString("0000180A-0000-1000-8000-00805F9B34FB"), // Device Information Service
@@ -54,6 +56,8 @@ fun connectToDevice(
 
         )
 
+ */
+
         bluetoothAdapter.cancelDiscovery()
 
         var socket: BluetoothSocket? = null
@@ -68,6 +72,9 @@ fun connectToDevice(
                         connected = true
                         gatt?.discoverServices() // Optionally discover services here
                         addConnectedDevice(device)
+                        println("${device.name} added into Connected Devices")
+
+
                     } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                         connected = false
                         gatt?.close()
@@ -77,7 +84,9 @@ fun connectToDevice(
                     // Update UI on the main thread
                     CoroutineScope(Dispatchers.Main).launch {
                         onConnectionComplete(connected, null) // Note the null, as there's no BluetoothSocket for BLE
-                        Toast.makeText(context, if (connected) "Connected to ${device.name}" else "Failed to connect to ${device.name}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, if (connected) "Connected to ${device.name}"  else "Failed to connect to ${device.name}", Toast.LENGTH_SHORT).show()
+                        delay(3000)
+                        Toast.makeText(context, if(connected) "${device.name} added to Connected Device" else "Please turn on your device for connection", Toast.LENGTH_LONG).show()
                     }
                 }
             }
@@ -134,6 +143,7 @@ fun connectToDevice(
                 // Disconnection detected
                 connected = false
                 println("Disconnected from ${device.name}: ${e.message}")
+                //Toast.makeText(context, "${device.name}: Lost Connection", Toast.LENGTH_SHORT).show()
                 removeDisconnectedDevice(device)
                 break
             }

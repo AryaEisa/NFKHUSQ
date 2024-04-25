@@ -2,6 +2,7 @@
 
 package com.example.nfkhusq
 
+import android.bluetooth.BluetoothDevice
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
@@ -14,18 +15,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.example.nfkhusq.Connection.connectedDeviceList
 import com.example.nfkhusq.Permissions.BluetoothPermissions
 import com.example.nfkhusq.Permissions.LocationPermission
 import com.example.nfkhusq.Screens.BluetoothLeScanner
+//import com.example.nfkhusq.Screens.DeviceButton
 import com.example.nfkhusq.Screens.InfoPage
 
-
+fun getDeviceByAddress(address: String?): BluetoothDevice? {
+    return connectedDeviceList.find { it.address == address }
+}
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun Navpage() {
+
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "startPage") {
         composable("startPage") { StartPage(navController) }

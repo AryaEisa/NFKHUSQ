@@ -2,6 +2,8 @@ package com.example.nfkhusq.Screens
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -22,28 +24,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.nfkhusq.Connection.getConnectedDevices
 
 
-// Define a list to store connected devices
-val connectedDeviceList = mutableListOf<BluetoothDevice>()
-
-// Function to add a connected device
-fun addConnectedDevice(device: BluetoothDevice) {
-    connectedDeviceList.add(device)
-}
-
-// Function to remove a disconnected device
-fun removeDisconnectedDevice(device: BluetoothDevice) {
-    connectedDeviceList.remove(device)
-}
-
-// Function to get the list of connected devices
-fun getConnectedDevices(): List<BluetoothDevice> {
-    return connectedDeviceList.toList()
-}
-
+@RequiresApi(Build.VERSION_CODES.R)
 @Composable
 fun InfoPage() {
     val connectedDevices = remember { getConnectedDevices() }
@@ -85,41 +70,6 @@ fun InfoPage() {
 
 
 
-@SuppressLint("MissingPermission")
-@Composable
-fun DeviceInfo(device: BluetoothDevice) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-
-        ) {
-
-                Text(
-                    text = "    Name: ${device.name ?: "Unknown"}",
-                    modifier = Modifier.padding(bottom = 4.dp),
-                    style = MaterialTheme.typography.bodySmall
-                )
-
-                Text(
-                    text = "    ${device.address}",
-                    modifier = Modifier.padding(bottom = 4.dp),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f) // Subdued color for address
-                )
-
-            // Add more information about the device as needed
-        }
-    }
-}
 
 
-@Preview
-@Composable
-private fun rr() {
-    InfoPage()
-}
+
