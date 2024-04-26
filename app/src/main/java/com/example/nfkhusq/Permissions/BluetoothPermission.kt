@@ -42,11 +42,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.glance.appwidget.GlanceAppWidget
+import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.nfkhusq.R
 import com.example.nfkhusq.ui.theme.NFKHUSQTheme
 import timber.log.Timber
+
+
+
 
 /*
 Annotations: @RequiresApi(Build.VERSION_CODES.S)

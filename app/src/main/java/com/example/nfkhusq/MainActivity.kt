@@ -20,6 +20,9 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.nfkhusq.ui.theme.NFKHUSQTheme
 import android.Manifest
+import androidx.glance.appwidget.GlanceAppWidget
+import androidx.glance.appwidget.GlanceAppWidgetReceiver
+import com.example.nfkhusq.ui.theme.NFKHUSQTheme
 
 
 /*

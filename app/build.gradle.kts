@@ -38,6 +38,10 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.11"
     }
     kotlinOptions {
         jvmTarget = "1.8"
@@ -79,6 +83,14 @@ dependencies {
     implementation ("com.jakewharton.timber:timber:5.0.1")
     implementation ("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
 
+    // For AppWidgets support
+    implementation( "androidx.glance:glance-appwidget:1.0.0" )
+
+    // For interop APIs with Material 2
+    implementation( "androidx.glance:glance-material:1.0.0" )
+
+    // For interop APIs with Material 3
+    implementation( "androidx.glance:glance-material3:1.0.0" )
     val room_version = "2.5.0"
 
     implementation ("androidx.room:room-runtime:$room_version")
