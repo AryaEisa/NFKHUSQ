@@ -3,6 +3,7 @@ package com.example.nfkhusq.Widget
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.annotation.ContentView
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,47 +43,8 @@ class HusqvarnaWidget: GlanceAppWidget() {
     override suspend fun provideGlance(context: Context, id: GlanceId) {
 
             provideContent {
-               ContentView()
+                com.example.nfkhusq.Widget.ContentView()
             }
 
     }
-}
-
-@Composable
-private fun ContentView() {
-    val context = LocalContext.current
-
-    androidx.glance.layout.Column(
-        modifier = GlanceModifier
-            .fillMaxSize()
-            .background(day = Color.Black, night = Color.Black)
-            .clickable(
-                onClick = actionStartActivity(
-                    Intent(context, MainActivity::class.java).apply {
-                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    }
-                )
-            ),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(text = "BLE/LE", style = TextStyle(color = ColorProvider(Color.White, Color.White)))
-        Image(
-            provider = ImageProvider(R.drawable.hqvarna),
-            contentDescription = null,
-            modifier = GlanceModifier
-                .fillMaxSize()
-
-                .cornerRadius(30.dp),
-            contentScale = ContentScale.Fit
-            )
-        Text(text = "BLE/LE scanner")
-    }
-
-}
-
-@Preview
-@Composable
-private fun test() {
-    ContentView()
 }
