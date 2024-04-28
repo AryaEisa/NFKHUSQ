@@ -74,14 +74,6 @@ fun BluetoothLeScanner(navController: NavController) {
     //isDiscovering: A state to keep track of whether the app is currently discovering devices.
     val isDiscovering = remember { mutableStateOf(false) }
     remember { mutableListOf<BluetoothDevice>() }
-    /*
-    A permission launcher is set up to request the BLUETOOTH_CONNECT permission if
-    it's not already granted. This is essential for accessing Bluetooth capabilities
-    in Android 12 and above.
-
-     */
-
-    // Permission launcher
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission(),
         onResult = { isGranted ->
@@ -92,20 +84,8 @@ fun BluetoothLeScanner(navController: NavController) {
             }
         }
     )
-
-
-    /*
-    This ensures that the Bluetooth receiver is registered when the UI is visible and
-    unregistered when the UI is no longer in use, helping to manage resources efficiently
-    and avoid memory leaks.
-     */
     DisposableEffect(context) {
         val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
-        /*
-This is a component that listens for Bluetooth devices being found nearby.
-If a device is found and it has a name, it adds the device to the list bluetoothDevices.
- */
-
         val bluetoothReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 intent?.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)?.let { device ->
@@ -125,11 +105,6 @@ If a device is found and it has a name, it adds the device to the list bluetooth
             context.unregisterReceiver(bluetoothReceiver)
         }
     }
-    /*
- LaunchedEffect: This block checks if the necessary Bluetooth permission is granted.
- If not, it launches a request for this permission. If the permission is already granted,
- it starts the Bluetooth discovery process.
-  */
     LaunchedEffect(key1 = Unit) {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
             permissionLauncher.launch(Manifest.permission.BLUETOOTH_CONNECT)
@@ -137,12 +112,6 @@ If a device is found and it has a name, it adds the device to the list bluetooth
             startDiscovery(bluetoothAdapter, isDiscovering)
         }
     }
-
-    /*
-    A scaffold structure with a top app bar displaying the title "Bluetooth Scanner".
-    Inside the scaffold, there's a column layout that lists all discovered Bluetooth
-    devices using a LazyColumn, which is efficient for displaying lists of data.
-     */
     Scaffold(
         topBar = {
             TopAppBar(
@@ -202,18 +171,6 @@ If a device is found and it has a name, it adds the device to the list bluetooth
                         )
                     }
                 }
-
-                /*
-                Button(
-                    onClick = { navController.navigate("InfoPage") },
-                    modifier = Modifier.fillMaxWidth(),
-
-                ) {
-                    Icon(Icons.Filled.Info, contentDescription = "Info page")
-                    Spacer(Modifier.width(8.dp))
-                    Text("My devices")
-                }
-                */
                 Spacer(modifier = Modifier.height(10.dp))
                 LazyColumn {
                     items(bluetoothDevices) { deviceItem ->
@@ -224,12 +181,6 @@ If a device is found and it has a name, it adds the device to the list bluetooth
         }
     }
 }
-/*
-This function is responsible for how each Bluetooth device is displayed:
-
-Card and Row Layout: Each device is shown in a card format, making it
-visually distinct. Inside the card, the device's name and address are displayed in a row format.
- */
 
 /*
 Summary::

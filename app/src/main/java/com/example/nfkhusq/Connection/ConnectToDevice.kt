@@ -14,11 +14,13 @@ import com.example.nfkhusq.Connection.removeDisconnectedDevice
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.io.IOException
 import java.util.UUID
+
 
 
 @SuppressLint("MissingPermission")
@@ -36,27 +38,80 @@ fun connectToDevice(
             "0000110E-0000-1000-8000-00805F9B34FB",  // Audio/Video Remote Control Profile (AVRCP)
             "00001105-0000-1000-8000-00805F9B34FB"   // Object Push Profile (OPP)
         )
+        bluetoothAdapter.cancelDiscovery()
+
+        var socket: BluetoothSocket? = null
+        var connected = false
+
+        fun updateConnectionStatus() {
+            CoroutineScope(Dispatchers.Main).launch {
+                onConnectionComplete(connected, if (connected) socket else null)
+                Toast.makeText(context, if (connected) "Connected to ${device.name}" else "Failed to connect to ${device.name}", Toast.LENGTH_SHORT).show()
+                if (connected) {
+                    addConnectedDevice(device)
+                }
+            }
+        }
+
+        try {
+            for (uuidString in classicUuids) {
+                if (!isActive) return@launch  // Handle coroutine cancellation
+                try {
+                    val uuid = UUID.fromString(uuidString)
+                    socket = device.createRfcommSocketToServiceRecord(uuid)
+                    socket.connect()
+                    connected = true
+                    break
+                } catch (e: IOException) {
+                    continue
+                }
+            }
+
+            if (!connected) {
+                device.connectGatt(context, false, object : BluetoothGattCallback() {
+                    override fun onConnectionStateChange(gatt: BluetoothGatt?, status: Int, newState: Int) {
+                        super.onConnectionStateChange(gatt, status, newState)
+                        if (newState == BluetoothProfile.STATE_CONNECTED) {
+                            connected = true
+                            gatt?.discoverServices()
+                            addConnectedDevice(device)
+                        } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+                            gatt?.close()
+                            removeDisconnectedDevice(device)
+                        }
+                        updateConnectionStatus()
+                    }
+                })
+            } else {
+                updateConnectionStatus()
+            }
+        } catch (e: Exception) {
+            Timber.e("Exception in connection: ${e.message}")
+            updateConnectionStatus()
+        }
+    }
+}
+
+
+
 
 /*
-        val bleUuids = listOf(
-            UUID.fromString("0000180D-0000-1000-8000-00805F9B34FB"), // Heart Rate Service
-            UUID.fromString("0000180A-0000-1000-8000-00805F9B34FB"), // Device Information Service
-            UUID.fromString("0000180F-0000-1000-8000-00805F9B34FB"), // Battery Service
-            UUID.fromString("00001802-0000-1000-8000-00805F9B34FB"), // Immediate Alert Service
-            UUID.fromString("00001805-0000-1000-8000-00805F9B34FB"), // Current Time Service
-            UUID.fromString("00001816-0000-1000-8000-00805F9B34FB"), // Cycling Speed and Cadence Service
-            UUID.fromString("00001811-0000-1000-8000-00805F9B34FB"), // Alert Notification Service
-            UUID.fromString("00001812-0000-1000-8000-00805F9B34FB"), // Human Interface Device (HID) Service
-            UUID.fromString("0000180E-0000-1000-8000-00805F9B34FB"), // Phone Alert Status Service
-            UUID.fromString("0000180B-0000-1000-8000-00805F9B34FB"), // Network Availability Service
-            UUID.fromString("00001815-0000-1000-8000-00805F9B34FB"), // Automation IO Service
-            UUID.fromString("00001804-0000-1000-8000-00805F9B34FB"), // Tx Power Service
-            UUID.fromString("00001818-0000-1000-8000-00805F9B34FB"), // Cycling Power Service
-            UUID.fromString("00001819-0000-1000-8000-00805F9B34FB")  // Location and Navigation Service
-
+@SuppressLint("MissingPermission")
+fun connectToDevice(
+    device: BluetoothDevice,
+    context: Context,
+    bluetoothAdapter: BluetoothAdapter,
+    onConnectionComplete: (Boolean, BluetoothSocket?) -> Unit
+) {
+    CoroutineScope(Dispatchers.IO).launch {
+        val classicUuids = listOf(
+            "00001101-0000-1000-8000-00805F9B34FB",  // Serial Port Profile (SPP)
+            "0000111E-0000-1000-8000-00805F9B34FB",  // Hands-Free Profile (HFP)
+            "0000110A-0000-1000-8000-00805F9B34FB",  // Advanced Audio Distribution Profile (A2DP)
+            "0000110E-0000-1000-8000-00805F9B34FB",  // Audio/Video Remote Control Profile (AVRCP)
+            "00001105-0000-1000-8000-00805F9B34FB"   // Object Push Profile (OPP)
         )
 
- */
 
         bluetoothAdapter.cancelDiscovery()
 
@@ -160,6 +215,8 @@ fun disconnectDevice(socket: BluetoothSocket?) {
         }
     }
 }
+
+ */
 
 
 

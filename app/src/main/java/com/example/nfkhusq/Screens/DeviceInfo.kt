@@ -1,3 +1,5 @@
+@file:Suppress("DUPLICATE_LABEL_IN_WHEN")
+
 package com.example.nfkhusq.Screens
 
 import android.annotation.SuppressLint
@@ -18,6 +20,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.navigation.compose.rememberNavController
+import com.example.nfkhusq.Connection.getBondState
+import com.example.nfkhusq.Connection.getDeviceClass
+import com.example.nfkhusq.Connection.getDeviceType
 
 
 @RequiresApi(Build.VERSION_CODES.R)
@@ -64,41 +69,5 @@ fun DeviceInfo(device: BluetoothDevice) {
 
             // Add more information about the device as needed
         }
-    }
-}
-
-// Helper functions to interpret Bluetooth API constants into human-readable strings
-fun getBondState(bondState: Int): String {
-    return when (bondState) {
-        BluetoothDevice.BOND_BONDED -> "Bonded"
-        BluetoothDevice.BOND_BONDING -> "Bonding"
-        BluetoothDevice.BOND_NONE -> "Not Bonded"
-        else -> "Unknown"
-    }
-}
-
-fun getDeviceType(deviceType: Int): String {
-    return when (deviceType) {
-        BluetoothDevice.DEVICE_TYPE_CLASSIC -> "Classic"
-        BluetoothDevice.DEVICE_TYPE_LE -> "Low Energy"
-        BluetoothDevice.DEVICE_TYPE_DUAL -> "Dual Mode"
-        else -> "Unknown"
-    }
-}
-
-fun getDeviceClass(deviceClass: BluetoothClass): String {
-    return when (deviceClass.majorDeviceClass) {
-        BluetoothClass.Device.Major.COMPUTER -> "Computer"
-        BluetoothClass.Device.Major.PHONE -> "Phone"
-        BluetoothClass.Device.Major.PERIPHERAL -> "Peripheral"
-        BluetoothClass.Device.Major.AUDIO_VIDEO -> "Audio/Video"
-        BluetoothClass.Device.Major.WEARABLE -> "Wearable"
-        BluetoothClass.Device.Major.TOY -> "Toy"
-        BluetoothClass.Device.Major.NETWORKING -> "Networking"
-        BluetoothClass.Device.Major.HEALTH -> "Health"
-        BluetoothClass.Device.Major.MISC -> "Misk"
-        BluetoothClass.Device.Major.PERIPHERAL -> "Peripheral"
-        BluetoothClass.Device.Major.IMAGING -> "Imaging"
-        else -> "Other"
     }
 }

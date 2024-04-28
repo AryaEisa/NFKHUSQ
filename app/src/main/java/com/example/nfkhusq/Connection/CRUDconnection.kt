@@ -1,15 +1,29 @@
 package com.example.nfkhusq.Connection
 
 import android.bluetooth.BluetoothDevice
+import android.content.Context
+import android.util.Log
+import android.widget.Toast
+import timber.log.Timber
 
 
-// Define a list to store connected devices
 val connectedDeviceList = mutableListOf<BluetoothDevice>()
 
 // Function to add a connected device
 fun addConnectedDevice(device: BluetoothDevice) {
-    connectedDeviceList.add(device)
+    // Ensuring thread safety with synchronized block if needed
+    synchronized(connectedDeviceList) {
+        if (connectedDeviceList.any { it.address == device.address }) {
+            Timber.d("Device with address " + device.address + " already exists.")
+        } else {
+            connectedDeviceList.add(device)
+            Timber.d("Device added: " + device.address)
+        }
+    }
 }
+
+
+
 
 // Function to remove a disconnected device
 fun removeDisconnectedDevice(device: BluetoothDevice) {
