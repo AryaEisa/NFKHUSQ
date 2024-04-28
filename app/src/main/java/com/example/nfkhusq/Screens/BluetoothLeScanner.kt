@@ -55,13 +55,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
+import com.example.nfkhusq.Connection.BluetoothDeviceItem
 import com.example.nfkhusq.R
 import java.time.Instant
 
-data class BluetoothDeviceItem(
-    val device: BluetoothDevice,
-    var lastSeen: Instant
-)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("MissingPermission", "InlinedApi")
 @Composable

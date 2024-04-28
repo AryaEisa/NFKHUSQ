@@ -3,22 +3,21 @@
 package com.example.nfkhusq.Screens
 
 import android.annotation.SuppressLint
-import android.bluetooth.BluetoothClass
 import android.bluetooth.BluetoothDevice
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.em
 import androidx.navigation.compose.rememberNavController
 import com.example.nfkhusq.Connection.getBondState
 import com.example.nfkhusq.Connection.getDeviceClass
@@ -29,7 +28,10 @@ import com.example.nfkhusq.Connection.getDeviceType
 @SuppressLint("MissingPermission")
 @Composable
 fun DeviceInfo(device: BluetoothDevice) {
-
+    val batteryLevel = remember { mutableStateOf("Unknown") }
+    LaunchedEffect(device) {
+        batteryLevel.value = getBatteryLevel(device)
+    }
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -65,9 +67,16 @@ fun DeviceInfo(device: BluetoothDevice) {
                 text = "    Device Class: ${getDeviceClass(device.bluetoothClass)}",
                 style = MaterialTheme.typography.bodySmall
             )
-
+            Text(
+                text = "    Battery Level: ${batteryLevel.value}",
+                style = MaterialTheme.typography.bodySmall
+            )
 
             // Add more information about the device as needed
         }
     }
+}
+fun getBatteryLevel(device: BluetoothDevice): String {
+    // Placeholder: Fetch the battery level from the device's GATT profile
+    return "75%"  // Example value
 }

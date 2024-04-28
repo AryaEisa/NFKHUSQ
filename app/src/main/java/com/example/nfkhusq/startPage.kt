@@ -1,6 +1,7 @@
 package com.example.nfkhusq
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -11,8 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.BluetoothDisabled
+import androidx.compose.material.icons.filled.LocationOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -24,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -80,9 +82,9 @@ fun StartPage(navController: NavController) {
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
             ) {
-                Icon(Icons.Filled.LocationOn, contentDescription = "Location Permission")
+                Icon(Icons.Default.LocationOff, contentDescription = "Location Permission", modifier = Modifier.background(color = Color.Red))
                 Spacer(Modifier.width(8.dp))
-                Text("Location Permissions")
+                Text("Location Permissions", style = TextStyle(color = Color.Black))
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -92,9 +94,9 @@ fun StartPage(navController: NavController) {
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
             ) {
-                Icon(Icons.Filled.Info, contentDescription = "Bluetooth Permission")
+                Icon(Icons.Filled.BluetoothDisabled, contentDescription = "Bluetooth Permission", modifier = Modifier.background(color = Color.Blue))
                 Spacer(Modifier.width(8.dp))
-                Text("Bluetooth Permissions")
+                Text("Bluetooth Permissions", style = TextStyle(color = Color.Black))
             }
 
 

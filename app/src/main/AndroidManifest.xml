@@ -66,8 +66,6 @@
                 android:resource="@xml/widget_husqvarna_provider" />
         </receiver>
 
-
-
     </application>
 
 </manifest>

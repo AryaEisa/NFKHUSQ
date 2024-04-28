@@ -27,11 +27,12 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.nfkhusq.Connection.BluetoothDeviceItem
 import com.example.nfkhusq.Connection.connectToDevice
 
 @SuppressLint("MissingPermission")
 @Composable
-fun DeviceItem(deviceItem: BluetoothDeviceItem, context: Context,bluetoothAdapter: BluetoothAdapter) {
+fun DeviceItem(deviceItem: BluetoothDeviceItem, context: Context, bluetoothAdapter: BluetoothAdapter) {
     var isConnecting by remember { mutableStateOf(false) }
     /*
     Card: A Compose UI element that provides an elevated card-like appearance.

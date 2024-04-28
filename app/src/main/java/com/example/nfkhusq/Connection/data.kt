@@ -2,12 +2,6 @@ package com.example.nfkhusq.Connection
 
 import android.bluetooth.BluetoothClass
 import android.bluetooth.BluetoothDevice
-import androidx.room.Dao
-import androidx.room.Entity
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.PrimaryKey
-import androidx.room.Query
 import java.time.Instant
 
 
@@ -73,3 +67,8 @@ fun getDeviceClass(deviceClass: BluetoothClass): String {
         else -> "Other"
     }
 }
+
+data class BluetoothDeviceItem(
+    val device: BluetoothDevice,
+    var lastSeen: Instant
+)

@@ -39,18 +39,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.glance.appwidget.GlanceAppWidget
-import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.nfkhusq.R
 import com.example.nfkhusq.ui.theme.NFKHUSQTheme
 import timber.log.Timber
-
-
 
 
 /*
@@ -163,7 +160,7 @@ The back button uses navController.navigateUp() to navigate to the previous scre
                     Text(
                         "Request Bluetooth Permissions",
                         fontWeight = FontWeight.Bold,
-                        style = MaterialTheme.typography.bodyLarge,
+                        style = TextStyle(color = Color.Black),
                         color = Color.White
                     )
                 }
@@ -192,7 +189,7 @@ Navigation Button: Appears if permissions are granted, allowing navigation to th
                             .padding(top = 16.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                     ) {
-                        Text("Go to Bluetooth Scanner", fontWeight = FontWeight.Bold, color = Color.White)
+                        Text("Go to Bluetooth Scanner", fontWeight = FontWeight.Bold, color = Color.White, style = TextStyle(color = Color.Black))
                     }
 
                 }
