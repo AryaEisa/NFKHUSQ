@@ -6,11 +6,13 @@ import android.content.Context
 import android.os.Build
 import android.os.Environment
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -26,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import androidx.navigation.NavController
@@ -41,42 +44,39 @@ fun InfoPage(navController: NavController) {
     val context = LocalContext.current
     val connectedDevices = remember { getConnectedDevices() }
 
-    // Function to generate a file containing the information to be downloaded
-    fun generateDownloadableFile(): File {
-        val file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "connected_devices.txt")
-        file.writeText(connectedDevices.joinToString(separator = "\n"))
-        return file
-    }
-
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = Color.Black
     ) {
+        Image(
+            painter = painterResource(id = R.drawable.husq3),
+            contentDescription = "Background Image",
+            modifier = Modifier.fillMaxWidth()
+        )
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top, // Align header to top
-            modifier = Modifier.padding(top = 16.dp, bottom = 16.dp) // Add padding for content
+            verticalArrangement = Arrangement.Top,
+            modifier = Modifier.padding(top = 16.dp, bottom = 16.dp)
         ) {
             Text(
                 text = "Connected Devices",
-                style = MaterialTheme.typography.bodySmall, // Use h6 for section header
-                modifier = Modifier.padding(horizontal = 16.dp), // Add horizontal padding for title
-                color = Color.White
+                style = MaterialTheme.typography.bodyMedium, // Use larger typography for the title
+                modifier = Modifier.padding(horizontal = 16.dp),
+                color = Color.White // Ensure the color contrasts well with the background
             )
             if (connectedDevices.isEmpty()) {
-                // Display a placeholder message for no devices
                 Text(
                     text = "No connected devices found.",
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.run { padding(horizontal = 16.dp) },
-                    color = Color.White
+                    style = MaterialTheme.typography.bodyMedium, // More prominent style for important messages
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 20.dp),
+                    color = Color.White // Use an error color to highlight no devices
                 )
             } else {
                 LazyColumn(contentPadding = PaddingValues(16.dp)) {
                     items(connectedDevices) { device ->
-                        DeviceInfo(navController = navController, device = device )
-                        Spacer(modifier = Modifier.height(8.dp)) // Add spacing between devices
-                        Divider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)) // Use a lighter divider
+                        DeviceInfo(navController = navController, device = device)
+                        Spacer(modifier = Modifier.height(8.dp)) // Maintain visual spacing
+                        Divider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f))
                     }
                 }
             }
@@ -84,22 +84,6 @@ fun InfoPage(navController: NavController) {
     }
 }
 
-
-// Function to download the file using Android's DownloadManager
-@SuppressLint("ServiceCast")
-fun downloadFile(context: Context, file: File) {
-    val uri = FileProvider.getUriForFile(context, "${context.packageName}.file-provider", file)
-
-    val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-    val request = DownloadManager.Request(uri).apply {
-        setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
-        setTitle("Downloading")
-        setDescription("Downloading ${file.name}")
-        setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, file.name)
-        setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-    }
-    downloadManager.enqueue(request)
-}
 
 
 

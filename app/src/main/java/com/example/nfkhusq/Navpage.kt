@@ -25,7 +25,6 @@ import com.example.nfkhusq.Connection.connectedDeviceList
 import com.example.nfkhusq.Permissions.BluetoothPermissions
 import com.example.nfkhusq.Permissions.LocationPermission
 import com.example.nfkhusq.Screens.BluetoothLeScanner
-import com.example.nfkhusq.Screens.DeviceDetailView
 import com.example.nfkhusq.Screens.DeviceDetails
 //import com.example.nfkhusq.Screens.DeviceButton
 import com.example.nfkhusq.Screens.InfoPage
