@@ -61,6 +61,7 @@ android {
 
 dependencies {
 
+    implementation("com.google.android.gms:play-services-wallet:19.3.0")
     val nav_version = "2.7.7"
     implementation("androidx.navigation:navigation-compose:$nav_version")
     implementation("androidx.core:core-ktx:1.9.0")

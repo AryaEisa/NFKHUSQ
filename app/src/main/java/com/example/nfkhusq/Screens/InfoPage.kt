@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
+import androidx.navigation.NavController
 import com.example.nfkhusq.Connection.getConnectedDevices
 import com.example.nfkhusq.R
 import java.io.File
@@ -36,7 +37,7 @@ import java.io.File
 
 @RequiresApi(Build.VERSION_CODES.R)
 @Composable
-fun InfoPage() {
+fun InfoPage(navController: NavController) {
     val context = LocalContext.current
     val connectedDevices = remember { getConnectedDevices() }
 
@@ -73,21 +74,11 @@ fun InfoPage() {
             } else {
                 LazyColumn(contentPadding = PaddingValues(16.dp)) {
                     items(connectedDevices) { device ->
-                        DeviceInfo(device = device)
+                        DeviceInfo(navController = navController, device = device )
                         Spacer(modifier = Modifier.height(8.dp)) // Add spacing between devices
                         Divider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)) // Use a lighter divider
                     }
                 }
-            }
-            // Download button
-            Button(
-                onClick = {
-                    val file = generateDownloadableFile()
-                    downloadFile(context, file)
-                },
-                modifier = Modifier.padding(top = 16.dp)
-            ) {
-                Text(text = "Download latest data")
             }
         }
     }

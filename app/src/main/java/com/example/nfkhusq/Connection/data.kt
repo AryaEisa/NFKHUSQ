@@ -3,6 +3,9 @@ package com.example.nfkhusq.Connection
 import android.bluetooth.BluetoothClass
 import android.bluetooth.BluetoothDevice
 import java.time.Instant
+import java.util.UUID
+
+
 
 
 // Helper functions to interpret Bluetooth API constants into human-readable strings
@@ -16,9 +19,9 @@ fun getBondState(bondState: Int): String {
 
 fun getDeviceType(deviceType: Int): String {
     return when (deviceType) {
-        BluetoothDevice.DEVICE_TYPE_CLASSIC -> "Classic"
+        BluetoothDevice.DEVICE_TYPE_CLASSIC -> "Classic Bluetooth"
         BluetoothDevice.DEVICE_TYPE_LE -> "Bluetooth Low Energy"
-        BluetoothDevice.DEVICE_TYPE_DUAL -> "Dual Mode"
+        BluetoothDevice.DEVICE_TYPE_DUAL -> "Support both BLE & LE"
         else -> "Unknown"
     }
 }
@@ -70,5 +73,6 @@ fun getDeviceClass(deviceClass: BluetoothClass): String {
 
 data class BluetoothDeviceItem(
     val device: BluetoothDevice,
-    var lastSeen: Instant
+    var lastSeen: Instant,
+    var supportedUuids: List<UUID> = listOf()
 )

@@ -25,6 +25,8 @@ import com.example.nfkhusq.Connection.connectedDeviceList
 import com.example.nfkhusq.Permissions.BluetoothPermissions
 import com.example.nfkhusq.Permissions.LocationPermission
 import com.example.nfkhusq.Screens.BluetoothLeScanner
+import com.example.nfkhusq.Screens.DeviceDetailView
+import com.example.nfkhusq.Screens.DeviceDetails
 //import com.example.nfkhusq.Screens.DeviceButton
 import com.example.nfkhusq.Screens.InfoPage
 
@@ -42,8 +44,16 @@ fun Navpage() {
         composable("startPage") { StartPage(navController) }
         composable("LocationPermission") { LocationPermission(navController) }
         composable("BluetoothPermission") { BluetoothPermissions(navController) }
-        composable("InfoPage"){ InfoPage()}
+        composable("InfoPage"){ InfoPage(navController)}
         composable("BluetoothLEScanner") { BluetoothLeScanner(navController) }
+        composable("deviceDetails/{deviceAddress}") { backStackEntry ->
+            // Retrieve the device address from the navigation argument
+            val deviceAddress = backStackEntry.arguments?.getString("deviceAddress")
+            val device = getDeviceByAddress(deviceAddress)
+            device?.let {
+                DeviceDetails(it)
+            }
+        }
         // Default or error composable
         composable("error") {
             Column(
