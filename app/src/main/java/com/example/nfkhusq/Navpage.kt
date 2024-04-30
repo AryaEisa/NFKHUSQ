@@ -26,7 +26,6 @@ import com.example.nfkhusq.Permissions.BluetoothPermissions
 import com.example.nfkhusq.Permissions.LocationPermission
 import com.example.nfkhusq.Screens.BluetoothLeScanner
 import com.example.nfkhusq.Screens.DeviceDetails
-//import com.example.nfkhusq.Screens.DeviceButton
 import com.example.nfkhusq.Screens.InfoPage
 
 
@@ -50,7 +49,7 @@ fun Navpage() {
             val deviceAddress = backStackEntry.arguments?.getString("deviceAddress")
             val device = getDeviceByAddress(deviceAddress)
             device?.let {
-                DeviceDetails(it)
+                DeviceDetails(it, navController)
             }
         }
         // Default or error composable
