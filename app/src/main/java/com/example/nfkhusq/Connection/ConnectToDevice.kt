@@ -91,5 +91,3 @@ fun connectToDevice(
         }
     }
 }
-
-

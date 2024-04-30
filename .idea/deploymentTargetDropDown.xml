@@ -2,7 +2,7 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="app">
+      <entry key="NFK">
         <State>
           <targetSelectedWithDropDown>
             <Target>
@@ -10,12 +10,12 @@
               <deviceKey>
                 <Key>
                   <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\Arya\.android\avd\Resizable_Experimental_API_34.avd" />
+                  <value value="C:\Users\Arya\.android\avd\Pixel_Tablet_API_34.avd" />
                 </Key>
               </deviceKey>
             </Target>
           </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-04-29T09:21:29.417719500Z" />
+          <timeTargetWasSelectedWithDropDown value="2024-04-30T05:40:33.927240200Z" />
         </State>
       </entry>
     </value>
