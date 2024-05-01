@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 @SuppressLint("MissingPermission")
 @Composable
 fun SendDataToDevice(device: BluetoothDevice) {
+
     Surface(
         modifier = Modifier
             .fillMaxWidth()
