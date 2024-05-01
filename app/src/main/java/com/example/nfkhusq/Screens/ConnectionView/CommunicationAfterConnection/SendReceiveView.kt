@@ -3,6 +3,7 @@ package com.example.nfkhusq.Screens.ConnectionView.CommunicationAfterConnection
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -46,7 +47,7 @@ fun SendReceiveView(navController: NavController) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top,
-            modifier = Modifier.padding(top = 16.dp, bottom = 16.dp)
+            modifier = Modifier.padding(top = 16.dp, bottom = 16.dp).background(color = Color.Transparent)
         ) {
             Text(
                 text = "All Connected Devices",
@@ -56,7 +57,7 @@ fun SendReceiveView(navController: NavController) {
             )
                 LazyColumn(contentPadding = PaddingValues(16.dp)) {
                     items(connectedDevices) { device ->
-                        SendDataToDevice(navController = navController, device = device)
+                        SendDataToDevice(device = device)
                         Spacer(modifier = Modifier.height(8.dp)) // Maintain visual spacing
                         Divider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f))
                     }

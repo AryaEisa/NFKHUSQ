@@ -55,7 +55,7 @@ fun Navpage() {
             val deviceAddress = backStackEntry.arguments?.getString("deviceAddress")
             val device = getDeviceByAddress(deviceAddress)
             device?.let {
-                SendDataToDevice(navController, it)
+                SendDataToDevice(it)
             }
         }
         // Default or error composable
