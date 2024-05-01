@@ -1,0 +1,43 @@
+   var isChecked by remember { mutableStateOf(true) }
+    Row (modifier = Modifier.padding(16.dp)) {
+        Switch(
+            checked = isChecked,
+            onCheckedChange = { isChecked = !isChecked },
+            thumbContent = {
+                Icon(imageVector = Icons.Default.Check, contentDescription = stringResource(id = androidx.compose.ui.R.string.selected))
+            }
+        )
+    }
+
+
+    Denna kod är hur man fixar switch funktion korrekt.
+____________________________________________________________________________________________________
+
+
+InfoPage:
+
+            Är den sidan där redan anslutna enheter visas.
+            Denna funktion är också en vy sida som tar in DeviceInfo och där lagrar vi anslutna enheter.
+____________________________________________________________________________________________________
+
+DeviceItem:
+            Är den funktionen som visar upp alla lediga uppkopplingsbara enheter.
+
+____________________________________________________________________________________________________
+
+BluetoothLeScanner:
+
+            Är vyn där vi kallar DeviceItem och InfoPage.
+                - först DeviceItem för att kunna se lediga enheter och koppla oss till de
+                om möjligt.
+                - sedan InfoPage för att kunna se vilka enheter vi är uppkopplat till.
+
+____________________________________________________________________________________________________
+
+DetailItem:
+
+            Är den funktion som visar den anslutnas övriga information såsom Adress, typ etc.
+            Och informationerna hämtas korrekt av DeviceDetails, det deklarerar vi i NavPage.
+____________________________________________________________________________________________________
+
+

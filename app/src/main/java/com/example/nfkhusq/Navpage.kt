@@ -12,9 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -24,9 +21,9 @@ import androidx.navigation.compose.rememberNavController
 import com.example.nfkhusq.Connection.connectedDeviceList
 import com.example.nfkhusq.Permissions.BluetoothPermissions
 import com.example.nfkhusq.Permissions.LocationPermission
-import com.example.nfkhusq.Screens.BluetoothLeScanner
-import com.example.nfkhusq.Screens.DeviceDetails
-import com.example.nfkhusq.Screens.InfoPage
+import com.example.nfkhusq.Screens.ConnectionView.BluetoothLeScanner
+import com.example.nfkhusq.Screens.ConnectionView.DeviceDetails
+import com.example.nfkhusq.Screens.ConnectionView.InfoPage
 
 
 fun getDeviceByAddress(address: String?): BluetoothDevice? {
@@ -42,7 +39,7 @@ fun Navpage() {
         composable("startPage") { StartPage(navController) }
         composable("LocationPermission") { LocationPermission(navController) }
         composable("BluetoothPermission") { BluetoothPermissions(navController) }
-        composable("InfoPage"){ InfoPage(navController)}
+        composable("InfoPage"){ InfoPage(navController) }
         composable("BluetoothLEScanner") { BluetoothLeScanner(navController) }
         composable("deviceDetails/{deviceAddress}") { backStackEntry ->
             // Retrieve the device address from the navigation argument

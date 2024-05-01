@@ -1,4 +1,4 @@
-package com.example.nfkhusq.Screens
+package com.example.nfkhusq.Screens.ConnectionView
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth

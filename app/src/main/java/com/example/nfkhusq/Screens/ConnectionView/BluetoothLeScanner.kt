@@ -1,6 +1,6 @@
 @file:Suppress("DEPRECATION")
 
-package com.example.nfkhusq.Screens
+package com.example.nfkhusq.Screens.ConnectionView
 
 import android.Manifest
 import android.annotation.SuppressLint

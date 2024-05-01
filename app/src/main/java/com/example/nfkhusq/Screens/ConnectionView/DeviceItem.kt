@@ -1,4 +1,4 @@
-package com.example.nfkhusq.Screens
+package com.example.nfkhusq.Screens.ConnectionView
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter

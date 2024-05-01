@@ -1,10 +1,6 @@
-package com.example.nfkhusq.Screens
+package com.example.nfkhusq.Screens.ConnectionView
 
-import android.annotation.SuppressLint
-import android.app.DownloadManager
-import android.content.Context
 import android.os.Build
-import android.os.Environment
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -17,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -30,12 +25,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.core.content.FileProvider
 import androidx.navigation.NavController
 import com.example.nfkhusq.Connection.getConnectedDevices
 import com.example.nfkhusq.R
-import java.io.File
-
 
 
 @RequiresApi(Build.VERSION_CODES.R)
