@@ -40,4 +40,26 @@ DetailItem:
             Och informationerna hämtas korrekt av DeviceDetails, det deklarerar vi i NavPage.
 ____________________________________________________________________________________________________
 
+DeviceDetails:
+            Här är när vi kommer in i den valda anslutna enheten.
+            här får vi övriga information såsom adress, typ, class etc men i slutet kan vi se
+            övriga ihopkopplade enheter genom "SendReceiveView".
+
+____________________________________________________________________________________________________
+
+SendReceiveView:
+            Här är den delen vi blev navigerat till från DeviceDetails, här har vi lyckats att
+            display alla anslutna enheter.
+
+____________________________________________________________________________________________________
+SendDataToDevice:
+
+            Denna sida ska vara en funktion som skickar och tar emot data, tanken är att
+            när vi passerat "DetailItem" vi kan se övriga uppkopplade enheter där vi kan välja
+            skicka data eller mottag data.
+            Den tar in funktionen SendReceiveButton som är egentligen buttons som get oss valet att
+            ta eller skicka data.
+
+____________________________________________________________________________________________________
+
 

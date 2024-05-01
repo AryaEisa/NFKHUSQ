@@ -24,8 +24,7 @@ import com.example.nfkhusq.Connection.getBondState
 import com.example.nfkhusq.Connection.getDeviceClass
 import com.example.nfkhusq.Connection.getDeviceType
 import com.example.nfkhusq.R
-import com.example.nfkhusq.Screens.ConnectionView.DetailItem
-import com.example.nfkhusq.Screens.ConnectionView.InfoPage
+import com.example.nfkhusq.Screens.ConnectionView.CommunicationAfterConnection.SendReceiveView
 
 
 @SuppressLint("MissingPermission", "NewApi")
@@ -50,7 +49,7 @@ fun DeviceDetails(device: BluetoothDevice, navController: NavController) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "${device.name}",
+                    text = device.name,
                     style = MaterialTheme.typography.bodyLarge,
                     color = Color.White,
                     modifier = Modifier.padding(vertical = 8.dp)
@@ -61,7 +60,7 @@ fun DeviceDetails(device: BluetoothDevice, navController: NavController) {
                 DetailItem("Device Type", getDeviceType(device.type))
                 DetailItem("Device Class", getDeviceClass(device.bluetoothClass))
                 Divider(thickness = 2.dp, color = MaterialTheme.colorScheme.primary)
-                InfoPage(navController = navController)
+                SendReceiveView(navController = navController)
                 }
             }
         }

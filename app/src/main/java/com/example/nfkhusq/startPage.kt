@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BluetoothDisabled
-import androidx.compose.material.icons.filled.LocationOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -77,7 +76,7 @@ fun StartPage(navController: NavController) {
             Spacer(modifier = Modifier.height(32.dp))
 
             // Buttons for Navigation
-            Button(
+           /* Button(
                 onClick = { navController.navigate("LocationPermission") },
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
@@ -85,16 +84,16 @@ fun StartPage(navController: NavController) {
                 Icon(Icons.Default.LocationOff, contentDescription = "Location Permission", modifier = Modifier.background(color = Color.Red))
                 Spacer(Modifier.width(8.dp))
                 Text("Location Permissions", style = TextStyle(color = Color.Black))
-            }
+            }*/
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(
                 onClick = { navController.navigate("BluetoothPermission") },
                 modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.outline)
             ) {
-                Icon(Icons.Filled.BluetoothDisabled, contentDescription = "Bluetooth Permission", modifier = Modifier.background(color = Color.Blue))
+                Icon(Icons.Default.BluetoothDisabled, contentDescription = "Bluetooth Permission", modifier = Modifier.background(color = Color.Transparent))
                 Spacer(Modifier.width(8.dp))
                 Text("Bluetooth Permissions", style = TextStyle(color = Color.Black))
             }
