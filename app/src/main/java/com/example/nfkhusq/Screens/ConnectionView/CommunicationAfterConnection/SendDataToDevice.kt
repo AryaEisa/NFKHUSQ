@@ -16,11 +16,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 
 @RequiresApi(Build.VERSION_CODES.R)
 @SuppressLint("MissingPermission")
 @Composable
-fun SendDataToDevice(device: BluetoothDevice, bluetoothViewModel: BluetoothViewModel = viewModel()) {
+fun SendDataToDevice(device: BluetoothDevice, bluetoothViewModel: BluetoothViewModel = viewModel(), navController: NavController) {
 
     Surface(
         modifier = Modifier
@@ -41,7 +42,7 @@ fun SendDataToDevice(device: BluetoothDevice, bluetoothViewModel: BluetoothViewM
                 color = MaterialTheme.colorScheme.onSurface // Text color that contrasts with the surface
             )
             Row {
-                CustomButtons(device, bluetoothViewModel)
+                CustomButtons(device, bluetoothViewModel, navController)
             }
         }
     }

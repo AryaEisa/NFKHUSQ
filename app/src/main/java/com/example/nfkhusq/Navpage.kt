@@ -22,7 +22,7 @@ import com.example.nfkhusq.Connection.connectedDeviceList
 import com.example.nfkhusq.Permissions.BluetoothPermissions
 import com.example.nfkhusq.Permissions.LocationPermission
 import com.example.nfkhusq.Screens.ConnectionView.BluetoothLeScanner
-import com.example.nfkhusq.Screens.ConnectionView.CommunicationAfterConnection.SendDataToDevice
+import com.example.nfkhusq.Screens.ConnectionView.CommunicationAfterConnection.BluetoothDataView
 import com.example.nfkhusq.Screens.ConnectionView.DeviceDetails
 import com.example.nfkhusq.Screens.ConnectionView.InfoPage
 
@@ -50,14 +50,15 @@ fun Navpage() {
                 DeviceDetails(it, navController)
             }
         }
-        composable("sendDataToDevice/{deviceAddress}") { backStackEntry ->
+        composable("bluetoothDataView"){ BluetoothDataView()}
+        /*composable("sendDataToDevice/{deviceAddress}") { backStackEntry ->
             // Retrieve the device address from the navigation argument
             val deviceAddress = backStackEntry.arguments?.getString("deviceAddress")
             val device = getDeviceByAddress(deviceAddress)
             device?.let {
-                SendDataToDevice(it)
+                SendDataToDevice(it, ,navController)
             }
-        }
+        }*/
         // Default or error composable
         composable("error") {
             Column(

@@ -53,6 +53,16 @@ fun BluetoothDataView(bluetoothViewModel: BluetoothViewModel = viewModel()) {
                     }
                 }
 
+                // Adding a "Receive Data" button
+                Button(
+                    onClick = {
+                        bluetoothViewModel.receiveData()  // This will trigger data reception
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Receive Data")
+                }
+
                 Button(
                     onClick = { bluetoothViewModel.clearMessages() },
                     modifier = Modifier.fillMaxWidth()
@@ -63,6 +73,7 @@ fun BluetoothDataView(bluetoothViewModel: BluetoothViewModel = viewModel()) {
         }
     )
 }
+
 
 // ViewModel should be part of your architecture to hold and manage UI-related data in a lifecycle conscious way.
 class BluetoothViewModel : ViewModel() {
