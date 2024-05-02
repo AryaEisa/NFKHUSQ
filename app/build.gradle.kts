@@ -78,6 +78,14 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:1.2.0")
     implementation("androidx.activity:activity-compose:1.3.0-alpha06")
     implementation ("com.google.accompanist:accompanist-permissions:0.33.1-alpha")
+    implementation ("androidx.compose.runtime:runtime-livedata:1.2.0") // For LiveData integration
+    implementation ("androidx.compose.runtime:runtime-rxjava3:1.2.0") // For RxJava3 support
+// Kotlin Coroutines
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:<version>")
+// Kotlin Coroutines Android support
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:<version>")
+
+    implementation ("androidx.compose.runtime:runtime-livedata:<version>")
 
     implementation ("com.google.accompanist:accompanist-permissions:0.29.0-alpha")
     implementation ("com.jakewharton.timber:timber:5.0.1")

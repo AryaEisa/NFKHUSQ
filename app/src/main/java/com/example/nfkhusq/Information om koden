@@ -67,3 +67,27 @@ SendReceiveButton:
             knappar som ska ta eller skicka data.
 
 ____________________________________________________________________________________________________
+
+SendData:
+
+        Denna funktion ansvarar for överföring av data över bluetooth anslutning.
+
+            - outputStram.write(data.toByteArray()) : konverterar string data till bytes
+            och skriver det i bluetooth device anslutning genom outputStream. denna är länkad direkt
+            till Bluetooth Socket.
+            - outputStream.flush():  Försäkrar att det skrivna data till output stream skickas
+            omedelbart.
+            -Error Handling(^catch(e:IOException)^) om det framkommer problem då skickas ett
+            meddelande genom Timber.
+
+____________________________________________________________________________________________________
+
+
+StartCommunicationThread(socket: BluetoothSocket):
+
+        Denna funktion gör att ny thread för managing bluetooth data communication kontinuerlig.
+        Tillåter data att mottags in real-tid. den lagrar också mottagna data i en internt
+        databas.
+            - db: "AppDatabase" en rum databas abstraktion som föreslå tillgång till
+            databas operationen.
+

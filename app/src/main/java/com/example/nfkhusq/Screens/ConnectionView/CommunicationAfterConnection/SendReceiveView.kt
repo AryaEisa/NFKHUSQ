@@ -55,13 +55,13 @@ fun SendReceiveView(navController: NavController) {
                 modifier = Modifier.padding(horizontal = 16.dp),
                 color = Color.White // Ensure the color contrasts well with the background
             )
-                LazyColumn(contentPadding = PaddingValues(16.dp)) {
-                    items(connectedDevices) { device ->
-                        SendDataToDevice(device = device)
-                        Spacer(modifier = Modifier.height(8.dp)) // Maintain visual spacing
-                        Divider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f))
-                    }
+            LazyColumn(contentPadding = PaddingValues(16.dp)) {
+                items(connectedDevices) { device ->
+                    SendDataToDevice(device = device)
+                    Spacer(modifier = Modifier.height(8.dp)) // Maintain visual spacing
+                    Divider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f))
                 }
+            }
 
         }
     }

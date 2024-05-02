@@ -15,17 +15,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @RequiresApi(Build.VERSION_CODES.R)
 @SuppressLint("MissingPermission")
 @Composable
-fun SendDataToDevice(device: BluetoothDevice) {
+fun SendDataToDevice(device: BluetoothDevice, bluetoothViewModel: BluetoothViewModel = viewModel()) {
 
     Surface(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            ,
+        ,
         shape = RoundedCornerShape(8.dp) // Rounded corners for better visual integration
     ) {
 
@@ -40,7 +41,7 @@ fun SendDataToDevice(device: BluetoothDevice) {
                 color = MaterialTheme.colorScheme.onSurface // Text color that contrasts with the surface
             )
             Row {
-                CustomButtons()
+                CustomButtons(device, bluetoothViewModel)
             }
         }
     }

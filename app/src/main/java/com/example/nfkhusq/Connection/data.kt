@@ -6,8 +6,6 @@ import java.time.Instant
 import java.util.UUID
 
 
-
-
 // Helper functions to interpret Bluetooth API constants into human-readable strings
 fun getBondState(bondState: Int): String {
     return when (bondState) {
@@ -76,3 +74,4 @@ data class BluetoothDeviceItem(
     var lastSeen: Instant,
     var supportedUuids: List<UUID> = listOf()
 )
+
