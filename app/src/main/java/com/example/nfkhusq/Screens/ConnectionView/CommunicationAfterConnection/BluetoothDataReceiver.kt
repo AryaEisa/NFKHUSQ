@@ -1,5 +1,6 @@
 package com.example.nfkhusq.Screens.ConnectionView.CommunicationAfterConnection
 
+import android.bluetooth.BluetoothSocket
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,14 +22,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber
+import java.io.IOException
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BluetoothDataView(bluetoothViewModel: BluetoothViewModel = viewModel()) {
+fun BluetoothDataView(bluetoothViewModel: BluetoothViewModel = viewModel(), navController: NavController) {
     // Default value is necessary unless your LiveData is guaranteed to be non-null
     val messages by bluetoothViewModel.messages.observeAsState(initial = emptyList())
 
@@ -87,19 +91,60 @@ class BluetoothViewModel : ViewModel() {
     }
     // Method to receive data from Bluetooth
     fun receiveData() {
-        // Example to add received data
-        // In reality, you would use Bluetooth API callbacks to update this
+        // Launch a coroutine in the IO context
         CoroutineScope(Dispatchers.IO).launch {
-            val receivedData = listenToBluetoothDevice() // This method needs to be implemented based on your Bluetooth setup
-            _messages.postValue(receivedData)
+            // Obtain the connected BluetoothSocket from the ViewModel
+            val socket = getConnectedSocket()
+
+            // Check if the socket is not null
+            if (socket != null) {
+                try {
+                    // Listen to the Bluetooth device and receive data
+                    val receivedData = listenToBluetoothDevice(socket)
+
+                    // Update the LiveData with the received data
+                    _messages.postValue(receivedData)
+                } catch (e: IOException) {
+                    Timber.e("Error receiving data from Bluetooth device: ${e.message}")
+                } finally {
+                    // Close the socket after receiving data
+                    socket.close()
+                }
+            }
         }
+    }private fun getConnectedSocket(): BluetoothSocket? {
+        // Implement your logic to obtain the connected BluetoothSocket here
+        // This could involve establishing a Bluetooth connection with a device and obtaining the socket
+        // Return the connected BluetoothSocket or null if the connection is not established
+    return null
     }
 
-    private fun listenToBluetoothDevice(): List<String> {
-        // This method should interact with the Bluetooth API to receive data
-        // Return the data as a list of strings
-        return listOf("Sample Data 1", "Sample Data 2") // Placeholder for actual Bluetooth data
+
+
+    private fun listenToBluetoothDevice(socket: BluetoothSocket): List<String> {
+        val inputStream = socket.inputStream
+        val buffer = ByteArray(1024)
+        val receivedData = mutableListOf<String>()
+
+        try {
+            // Continuously read data from the input stream until an IOException occurs
+            while (true) {
+                val bytesRead = inputStream.read(buffer)
+                if (bytesRead == -1) {
+                    // End of stream reached
+                    break
+                }
+                // Convert the received bytes to a String
+                val data = String(buffer, 0, bytesRead)
+                receivedData.add(data)
+            }
+        } catch (e: IOException) {
+            Timber.e("Error reading from Bluetooth device: ${e.message}")
+        }
+
+        return receivedData
     }
+
 
     fun clearMessages() {
         _messages.value = emptyList()
