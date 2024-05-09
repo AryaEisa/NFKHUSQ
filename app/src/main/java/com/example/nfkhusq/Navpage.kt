@@ -19,13 +19,15 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.nfkhusq.Communication.BluetoothViewModel
 import com.example.nfkhusq.Connection.connectedDeviceList
 import com.example.nfkhusq.Permissions.BluetoothPermissions
 import com.example.nfkhusq.Permissions.LocationPermission
 import com.example.nfkhusq.Screens.ConnectionView.BluetoothLeScanner
-import com.example.nfkhusq.Screens.ConnectionView.CommunicationAfterConnection.BluetoothDataView
-import com.example.nfkhusq.Screens.ConnectionView.CommunicationAfterConnection.BluetoothViewModel
+import com.example.nfkhusq.Screens.ConnectionView.CommunicationAfterConnection.RecieveDataView
+//import com.example.nfkhusq.Screens.ConnectionView.CommunicationAfterConnection.BluetoothViewModel
 import com.example.nfkhusq.Screens.ConnectionView.CommunicationAfterConnection.SendDataToDevice
+import com.example.nfkhusq.Screens.ConnectionView.CommunicationAfterConnection.SendDataView
 import com.example.nfkhusq.Screens.ConnectionView.DeviceDetails
 import com.example.nfkhusq.Screens.ConnectionView.InfoPage
 
@@ -53,7 +55,8 @@ fun Navpage(bluetoothViewModel: BluetoothViewModel = viewModel()) {
                 DeviceDetails(it, navController)
             }
         }
-        composable("bluetoothDataView"){ BluetoothDataView(navController = navController)}
+        composable("RecieveDataView"){ RecieveDataView(navController = navController)}
+        composable("SendDataView"){ SendDataView(navController = navController) }
         composable("sendDataToDevice/{deviceAddress}") { backStackEntry ->
             // Retrieve the device address from the navigation argument
             val deviceAddress = backStackEntry.arguments?.getString("deviceAddress")
