@@ -32,7 +32,7 @@ fun CustomButtons(device: BluetoothDevice, bluetoothViewModel: BluetoothViewMode
 
     // Receive Data Button
     Button(onClick = {
-        navController.navigate("bluetoothDataView")
+        navController.navigate("RecieveDataView")
 
     }) {
         Icon(Icons.Default.CallReceived, contentDescription = "Receive Data", tint = Color.Green)

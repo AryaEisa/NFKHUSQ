@@ -34,7 +34,6 @@ import com.example.nfkhusq.Communication.BluetoothViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecieveDataView(bluetoothViewModel: BluetoothViewModel = viewModel(), navController: NavController) {
-    // Default value is necessary unless your LiveData is guaranteed to be non-null
     val messages by bluetoothViewModel.messages.observeAsState(initial = emptyList())
 
     Scaffold(
@@ -50,18 +49,17 @@ fun RecieveDataView(bluetoothViewModel: BluetoothViewModel = viewModel(), navCon
                     modifier = Modifier.weight(1f).fillMaxWidth(),
                     contentPadding = PaddingValues(vertical = 8.dp)
                 ) {
-                    items(messages) { message ->
+                    items(messages) { messageDetail ->
                         Text(
-                            text = message,
+                            text = "${messageDetail.content} (Type: ${messageDetail.type})",
                             modifier = Modifier.padding(vertical = 4.dp)
                         )
                     }
                 }
 
-                // Adding a "Receive Data" button
                 Button(
                     onClick = {
-                        bluetoothViewModel.receiveData()  // This will trigger data reception
+                        bluetoothViewModel.receiveData()  // Trigger data reception
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {
