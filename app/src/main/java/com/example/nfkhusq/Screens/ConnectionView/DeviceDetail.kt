@@ -30,16 +30,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.nfkhusq.Connection.getBondState
-import com.example.nfkhusq.Connection.getDeviceClass
-import com.example.nfkhusq.Connection.getDeviceType
+import com.example.nfkhusq.Communication.BluetoothViewModel
 import com.example.nfkhusq.R
 import com.example.nfkhusq.Screens.ConnectionView.CommunicationAfterConnection.SendReceiveView
 
 
 @SuppressLint("MissingPermission", "NewApi")
 @Composable
-fun DeviceDetails(device: BluetoothDevice, navController: NavController) {
+fun DeviceDetails(device: BluetoothDevice, navController: NavController, viewModel: BluetoothViewModel) {
     Scaffold(
 
         topBar = {
@@ -73,9 +71,9 @@ fun DeviceDetails(device: BluetoothDevice, navController: NavController) {
                 ) {
                     Divider(thickness = 2.dp, color = MaterialTheme.colorScheme.primary)
                     DetailItem("Address", device.address)
-                    DetailItem("Bond State", getBondState(device.bondState))
-                    DetailItem("Device Type", getDeviceType(device.type))
-                    DetailItem("Device Class", getDeviceClass(device.bluetoothClass))
+                    DetailItem("Bond State", viewModel.getBondState(device.bondState))
+                    DetailItem("Device Type", viewModel.getDeviceType(device.type))
+                    DetailItem("Device Class", viewModel.getDeviceClass(device.bluetoothClass))
                     Divider(thickness = 2.dp, color = MaterialTheme.colorScheme.primary)
                     SendReceiveView(navController = navController)
                 }

@@ -57,11 +57,13 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    buildToolsVersion = "34.0.0"
 }
 
 dependencies {
 
     implementation("com.google.android.gms:play-services-wallet:19.3.0")
+    implementation("com.google.ai.client.generativeai:generativeai:0.5.0")
     val nav_version = "2.7.7"
     implementation("androidx.navigation:navigation-compose:$nav_version")
     implementation("androidx.core:core-ktx:1.9.0")

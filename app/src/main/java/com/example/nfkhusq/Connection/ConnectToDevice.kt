@@ -9,6 +9,8 @@ import android.bluetooth.BluetoothProfile
 import android.bluetooth.BluetoothSocket
 import android.content.Context
 import android.widget.Toast
+import com.example.nfkhusq.Communication.BluetoothViewModel
+import com.example.nfkhusq.Communication.startCommunicationThread
 import com.example.nfkhusq.Connection.addConnectedDevice
 import com.example.nfkhusq.Connection.removeDisconnectedDevice
 import kotlinx.coroutines.CoroutineScope
@@ -28,6 +30,7 @@ fun connectToDevice(
     device: BluetoothDevice,
     context: Context,
     bluetoothAdapter: BluetoothAdapter,
+    viewModel: BluetoothViewModel,
     onConnectionComplete: (Boolean, BluetoothSocket?) -> Unit
 ) {
     CoroutineScope(Dispatchers.IO).launch {
@@ -48,7 +51,11 @@ fun connectToDevice(
                 onConnectionComplete(connected, if (connected) socket else null)
                 Toast.makeText(context, if (connected) "Connected to ${device.name}" else "Failed to connect to ${device.name}", Toast.LENGTH_SHORT).show()
                 if (connected) {
+                    viewModel.connectedSocket = socket  // Set the socket in ViewModel
                     addConnectedDevice(device)
+
+                } else {
+                    removeDisconnectedDevice(device)
                 }
             }
         }

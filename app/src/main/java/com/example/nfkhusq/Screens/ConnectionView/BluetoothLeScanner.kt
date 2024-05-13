@@ -57,7 +57,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
-import com.example.nfkhusq.Connection.BluetoothDeviceItem
+import com.example.nfkhusq.Communication.BluetoothViewModel
 import com.example.nfkhusq.R
 import java.time.Instant
 
@@ -65,10 +65,10 @@ import java.time.Instant
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("MissingPermission", "InlinedApi")
 @Composable
-fun BluetoothLeScanner(navController: NavController) {
+fun BluetoothLeScanner(navController: NavController, viewModel: BluetoothViewModel) {
     val context = LocalContext.current
     //bluetoothDevices: A list to hold the Bluetooth devices that are discovered
-    val bluetoothDevices = remember { mutableStateListOf<BluetoothDeviceItem>() }
+    val bluetoothDevices = remember { mutableStateListOf<BluetoothViewModel.BluetoothDeviceItem>() }
     //bluetoothAdapter: This is used to interact with the Bluetooth hardware on the Android device.
     val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
     //isDiscovering: A state to keep track of whether the app is currently discovering devices.
@@ -94,7 +94,12 @@ fun BluetoothLeScanner(navController: NavController) {
                         if (existingDevice != null) {
                             existingDevice.lastSeen = Instant.now()
                         } else {
-                            bluetoothDevices.add(BluetoothDeviceItem(device, Instant.now()))
+                            bluetoothDevices.add(
+                                BluetoothViewModel.BluetoothDeviceItem(
+                                    device,
+                                    Instant.now()
+                                )
+                            )
                         }
                     }
                 }
@@ -180,7 +185,7 @@ fun BluetoothLeScanner(navController: NavController) {
                 Spacer(modifier = Modifier.height(10.dp))
                 LazyColumn {
                     items(bluetoothDevices) { deviceItem ->
-                        DeviceItem(deviceItem, context, bluetoothAdapter!!)
+                        DeviceItem(deviceItem, context, bluetoothAdapter!!, viewModel )
                     }
                 }
             }

@@ -33,13 +33,14 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.nfkhusq.Connection.BluetoothDeviceItem
+import com.example.nfkhusq.Communication.BluetoothViewModel
+
 import com.example.nfkhusq.Connection.connectToDevice
 
 
 @SuppressLint("MissingPermission")
 @Composable
-fun DeviceItem(deviceItem: BluetoothDeviceItem, context: Context, bluetoothAdapter: BluetoothAdapter) {
+fun DeviceItem(deviceItem: BluetoothViewModel.BluetoothDeviceItem, context: Context, bluetoothAdapter: BluetoothAdapter, viewModel: BluetoothViewModel) {
     var isConnected by remember { mutableStateOf(false) }
     var isConnecting by remember { mutableStateOf(false) }
     Card(
@@ -48,7 +49,7 @@ fun DeviceItem(deviceItem: BluetoothDeviceItem, context: Context, bluetoothAdapt
             .padding(vertical = 8.dp) // Increased vertical padding for better tap targets and spacing
             .clickable(onClick = {
                 isConnecting = true
-                connectToDevice(deviceItem.device, context, bluetoothAdapter) { _, _ ->
+                connectToDevice(deviceItem.device, context, bluetoothAdapter, viewModel) { _, _ ->
                     isConnecting = false
                 }
             })
@@ -82,7 +83,7 @@ fun DeviceItem(deviceItem: BluetoothDeviceItem, context: Context, bluetoothAdapt
                 Button(
                     onClick = {
                         isConnecting = true
-                        connectToDevice(deviceItem.device, context, bluetoothAdapter) { isConnected, _ ->
+                        connectToDevice(deviceItem.device, context, bluetoothAdapter, viewModel) { isConnected, _ ->
                             isConnecting = false
                         }
                     }

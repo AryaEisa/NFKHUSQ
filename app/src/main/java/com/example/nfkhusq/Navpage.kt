@@ -24,6 +24,7 @@ import com.example.nfkhusq.Connection.connectedDeviceList
 import com.example.nfkhusq.Permissions.BluetoothPermissions
 import com.example.nfkhusq.Permissions.LocationPermission
 import com.example.nfkhusq.Screens.ConnectionView.BluetoothLeScanner
+import com.example.nfkhusq.Screens.ConnectionView.CommunicationAfterConnection.ReceiveView
 import com.example.nfkhusq.Screens.ConnectionView.CommunicationAfterConnection.RecieveDataView
 //import com.example.nfkhusq.Screens.ConnectionView.CommunicationAfterConnection.BluetoothViewModel
 import com.example.nfkhusq.Screens.ConnectionView.CommunicationAfterConnection.SendDataToDevice
@@ -46,16 +47,29 @@ fun Navpage(bluetoothViewModel: BluetoothViewModel = viewModel()) {
         composable("LocationPermission") { LocationPermission(navController) }
         composable("BluetoothPermission") { BluetoothPermissions(navController) }
         composable("InfoPage"){ InfoPage(navController) }
-        composable("BluetoothLEScanner") { BluetoothLeScanner(navController) }
+        composable("BluetoothLEScanner") { BluetoothLeScanner(navController, bluetoothViewModel) }
         composable("deviceDetails/{deviceAddress}") { backStackEntry ->
             // Retrieve the device address from the navigation argument
             val deviceAddress = backStackEntry.arguments?.getString("deviceAddress")
             val device = getDeviceByAddress(deviceAddress)
             device?.let {
-                DeviceDetails(it, navController)
+                DeviceDetails(it, navController, bluetoothViewModel)
             }
         }
-        composable("RecieveDataView"){ RecieveDataView(navController = navController)}
+
+
+        composable("RecieveDataView/{deviceAddress}"){backStackEntry ->
+            val deviceAddress = backStackEntry.arguments?.getString("deviceAddress")
+            val device = getDeviceByAddress(deviceAddress)
+            device?.let {
+                RecieveDataView(navController = navController, device = device)
+            }
+
+
+        }
+
+
+
         composable("SendDataView"){ SendDataView(navController = navController) }
         composable("sendDataToDevice/{deviceAddress}") { backStackEntry ->
             // Retrieve the device address from the navigation argument
